@@ -8,9 +8,10 @@ namespace AspNetAdvantix.Helpers
 {
     public static class DIApi
     {
+        public static List<OnlineCompany> companyLoggedIn = new List<OnlineCompany>();
         public static Company _oCompany;
         public static bool _connect;
-        public static bool Connect()
+        public static SAPbobsCOM.Company LoginSAP(string address, string dbName, string userName, string password)
         {
             Company oCompany = new Company();
             oCompany.LicenseServer = "10.0.100.31";
@@ -22,23 +23,10 @@ namespace AspNetAdvantix.Helpers
             oCompany.Server = "10.0.100.30";
             oCompany.DbUserName = "sa";
             oCompany.DbPassword = "B1Admin";
-            oCompany.CompanyDB = "TESTDATABASE";
-            oCompany.UserName = "manager";
-            oCompany.Password = "asdf";
-
-            int con = oCompany.Connect();
-            if (con == 0)
-            {
-                _oCompany = oCompany;
-                _connect = true;
-                Console.WriteLine("SAP Connected");
-                return true;
-            }
-            else
-            {
-                _connect = false;
-                return false;
-            }
+            oCompany.CompanyDB = dbName;
+            oCompany.UserName = userName;
+            oCompany.Password = password;
+            return oCompany;
         }
     }
 }

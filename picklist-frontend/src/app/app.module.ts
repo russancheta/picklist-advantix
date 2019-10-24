@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
-import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
@@ -23,13 +22,14 @@ import { Service } from './core/api.client';
 // New Components
 import { PickAndPackComponent } from './views/pickandpack/pickandpack.component';
 import { PicklistComponent } from './views/picklist/picklist.component';
+import { OpenSOComponent } from './views/openso/openso.component';
 
 import { P404Component } from './views/error/404.component';
 import { P500Component } from './views/error/500.component';
 import { LoginComponent } from './views/login/login.component';
 import { RegisterComponent } from './views/register/register.component';
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const APP_CONTAINERS = [
   DefaultLayoutComponent
@@ -51,6 +51,15 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ChartsModule } from 'ng2-charts';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ModalModule } from 'ngx-bootstrap';
+
+// NSWAG client
+import { API_BASE_URL } from './core/api.client';
+import { environment } from '../environments/environment';
+
+// Helpers
+import { JwtInterceptor } from './_helpers/jtw.interceptor';
+import { ErrorInterceptor } from './_helpers/error.interceptor';
 
 @NgModule({
   imports: [
@@ -68,7 +77,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ChartsModule,
     HttpClientModule,
     NgbModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    ModalModule.forRoot()
   ],
   declarations: [
     AppComponent,
@@ -78,9 +89,19 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     LoginComponent,
     RegisterComponent,
     PickAndPackComponent,
-    PicklistComponent
+    PicklistComponent,
+    OpenSOComponent
   ],
-  providers: [Service, HttpClientModule],
+  providers: [Service,
+    HttpClientModule,
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    {
+      provide: API_BASE_URL, useFactory: () => {
+        return environment.API_BASE_URL;
+      }
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

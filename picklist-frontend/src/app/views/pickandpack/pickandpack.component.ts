@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Service, OpenSalesOrder, ODLNViewModel, ODLNContentViewModel, OWTRViewModel, OWTRContentViewModel } from '../../core/api.client';
+import { Component, OnInit, TemplateRef } from '@angular/core';
+import { UpdateSalesOrder, Service, OpenSalesOrder } from '../../core/api.client';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { AuthService } from '../../shared/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-pickandpack',
@@ -16,18 +19,113 @@ export class PickAndPackComponent implements OnInit {
   fromWarehouse: string;
   toWarehouse: string;
   comments: string;
-  invTransferRows: OWTRContentViewModel[] = [];
+
+  modalRef: BsModalRef;
+
+  plNo: number = 0;
+  remarks: string = '';
 
   constructor(
-    private apiService: Service
+    private apiService: Service,
+    private authService: AuthService,
+    private modalService: BsModalService
   ) { }
 
   ngOnInit() {
     this.getOpenSalesOrders();
   }
 
-  postSAP() {
+  validationCheck(a: number, b: number, c: number) {
+    if (a <= b && a > 0) {
+      return false;
+    } else {
+      return true;
+    };
+  }
 
+  updateList() {
+    this.showLoading();
+    const listupdateSo: UpdateSalesOrder[] = [];
+    this.checkedSO.forEach(o => {
+      const updateSO = new UpdateSalesOrder();
+      updateSO.docEntry = o.docEntry;
+      updateSO.lineNum = o.lineNum;
+      updateSO.pickedQty = o.qtyToPost;
+      updateSO.itemCode = o.itemCode;
+      updateSO.remarks = this.remarks;
+      updateSO.plNo = this.plNo;
+      updateSO.objType = o.objType;
+      listupdateSo.push(updateSO);
+    });
+    this.apiService.updateSalesOrder(this.authService.getUserName() ,listupdateSo).subscribe(res => {
+      if (res.result == 'Success') {
+        this.modalRef.hide();
+        this.checkedSO = [];
+        this.getOpenSalesOrders();
+        Swal.fire({
+          type: 'success',
+          title: 'Transaction successfuly posted.',
+          showConfirmButton: false,
+          timer: 2500
+        })
+        console.log(res.message);
+        console.log(res.result);
+      } else {
+        this.modalRef.hide();
+        this.getOpenSalesOrders();
+        Swal.fire({
+          type: 'error',
+          title: 'Transaction was not posted.',
+          timer: 2500
+        })
+        console.log(res.message);
+        console.log(res.result);
+      };
+    })
+  }
+
+  checkSO(obj: OpenSalesOrder) {
+    if (this.checkedSO.includes(obj)) {
+      const i = this.checkedSO.indexOf(obj);
+      this.checkedSO.splice(i, 1);
+    } else {
+      this.checkedSO.push(obj);
+    }
+    console.table(this.checkedSO);
+  }
+
+  getOpenSalesOrders() {
+    this.apiService.getOpenSalesOrder().subscribe(response => {
+      this.openSalesOrders = response;
+      console.table(response);
+    });
+  }
+
+  openModal(template: TemplateRef<any>) {
+    this.apiService.getPicklistNo().subscribe(
+      res => {
+        this.plNo = res.pickListNum;
+      }
+    );
+    this.remarks = '';
+    this.modalRef = this.modalService.show(template);
+  }
+
+  closeModal() {
+    this.modalRef.hide();
+  }
+
+  showLoading() {
+    Swal.fire({
+      title: 'Loading',
+      text: 'Please wait',
+      showConfirmButton: false,
+      allowOutsideClick: false
+    });
+  }
+
+  /*
+  postSAP() {
     this.apiService.createOPKL(this.checkedSO).subscribe(res => {
       if(res.result === 'success'){
         console.log(res.message);
@@ -76,7 +174,9 @@ export class PickAndPackComponent implements OnInit {
     //   //this.getOpenSalesOrders();
     // }
   }
+  */
 
+  /*
   postOutright(data: OpenSalesOrder[]) {
 
     // header
@@ -98,14 +198,14 @@ export class PickAndPackComponent implements OnInit {
 
     odlnViewModel.odlnContent = odlnContentViewModel;
     console.log(odlnViewModel);
-    
+
     // post data
     this.apiService.createODLN(odlnViewModel)
-    .subscribe(res => {
-      if(res.result == 'Success'){
-        alert(res.message);
-      }
-    });
+      .subscribe(res => {
+        if (res.result == 'Success') {
+          alert(res.message);
+        }
+      });
   }
 
   postConsignment(data: OpenSalesOrder[]) {
@@ -133,27 +233,10 @@ export class PickAndPackComponent implements OnInit {
 
     // post data
     this.apiService.createOWTR(owtrViewModel).subscribe(response => {
-      if(response.result == 'Success') {
+      if (response.result == 'Success') {
         alert(response.message);
       }
     });
-  }
-
-  checkSO(obj: OpenSalesOrder) {
-    if (this.checkedSO.includes(obj)) {
-      const i = this.checkedSO.indexOf(obj);
-      this.checkedSO.splice(i, 1);
-    } else {
-      this.checkedSO.push(obj);
-    }
-    console.log(this.checkedSO);
-  }
-
-  getOpenSalesOrders() {
-    this.apiService.getOpenSalesOrder().subscribe(response => {
-      this.openSalesOrders = response;
-      console.table(response);
-    });
-  }
+  } */
 
 }

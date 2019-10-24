@@ -1,19 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using AspNetAdvantix.Model;
+using AspNetAdvantix.Models;
 using AspNetAdvantix.Helpers;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Swagger;
+using SAPbobsCOM;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AspNetAdvantix
 {
@@ -34,9 +43,9 @@ namespace AspNetAdvantix
                 options.UseSqlServer(
                     Configuration.GetConnectionString("SQLConnection")));
 
-            services.AddDbContext<PicklistContext>(options =>
+            services.AddDbContext<PickListDbContext>(options => 
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("Picklist")));
+                    Configuration.GetConnectionString("SQLConnection")));
 
             services.AddCors(options => {
                 options.AddPolicy(MyAllowSpecificOrigins, builder => {
@@ -48,6 +57,26 @@ namespace AspNetAdvantix
 
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1"});
+            });
+
+            var tokenProvider = new RsaJwtTokenProvider("issuer", "audience", "mykeyname");
+            services.AddSingleton<ITokenProvider>(tokenProvider);
+
+            services.AddSingleton<ITokenProvider>(tokenProvider);
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = tokenProvider.GetValidationParameters();
+                });
+
+            services.AddAuthorization(auth =>
+            {
+                auth.DefaultPolicy = new AuthorizationPolicyBuilder()
+                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser()
+                    .Build();
             });
         }
 
@@ -65,10 +94,15 @@ namespace AspNetAdvantix
             }
 
             //app.UseHttpsRedirection();
+
             app.UseCors(MyAllowSpecificOrigins);
-            DIApi.Connect();
+
+            app.UseAuthentication();
+
             app.UseMvc();
+
             app.UseSwagger();
+
             app.UseSwaggerUI(c => {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });

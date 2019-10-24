@@ -49,8 +49,13 @@ export const navItems: NavData[] = [
     icon: 'icon-drop'
   },
   {
-    name: 'Picklist',
+    name: 'Pick List',
     url: '/picklist',
+    icon: 'icon-drop'
+  },
+  {
+    name: 'Open SO',
+    url: '/openso',
     icon: 'icon-drop'
   }
 ];

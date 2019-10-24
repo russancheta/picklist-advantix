@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\rpo\\Desktop\\advantix\\picklist\\AspNetAdvantix\\AspNetAdvantix.csproj": {}
+    "C:\\advantix\\picklist-advantix\\AspNetAdvantix\\AspNetAdvantix.csproj": {}
   },
   "projects": {
-    "C:\\Users\\rpo\\Desktop\\advantix\\picklist\\AspNetAdvantix\\AspNetAdvantix.csproj": {
+    "C:\\advantix\\picklist-advantix\\AspNetAdvantix\\AspNetAdvantix.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\rpo\\Desktop\\advantix\\picklist\\AspNetAdvantix\\AspNetAdvantix.csproj",
+        "projectUniqueName": "C:\\advantix\\picklist-advantix\\AspNetAdvantix\\AspNetAdvantix.csproj",
         "projectName": "AspNetAdvantix",
-        "projectPath": "C:\\Users\\rpo\\Desktop\\advantix\\picklist\\AspNetAdvantix\\AspNetAdvantix.csproj",
+        "projectPath": "C:\\advantix\\picklist-advantix\\AspNetAdvantix\\AspNetAdvantix.csproj",
         "packagesPath": "C:\\Users\\rpo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\rpo\\Desktop\\advantix\\picklist\\AspNetAdvantix\\obj\\",
+        "outputPath": "C:\\advantix\\picklist-advantix\\AspNetAdvantix\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -41,11 +41,28 @@
       "frameworks": {
         "netcoreapp2.2": {
           "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[8.1.1, )"
+            },
             "Microsoft.AspNetCore.App": {
               "suppressParent": "All",
               "target": "Package",
               "version": "[2.2.0, )",
               "autoReferenced": true
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.Identity": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.Razor.Design": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.2.0, )"
             },
             "Microsoft.NETCore.App": {
               "suppressParent": "All",
@@ -53,9 +70,25 @@
               "version": "[2.2.0, )",
               "autoReferenced": true
             },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[2.2.3, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[5.0.0-rc3, )"
+              "version": "[5.0.0-rc4, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[5.5.0, )"
+            },
+            "System.Security.Cryptography.Csp": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "fluentValidation.AspNetCore": {
+              "target": "Package",
+              "version": "[8.4.0, )"
             }
           },
           "imports": [

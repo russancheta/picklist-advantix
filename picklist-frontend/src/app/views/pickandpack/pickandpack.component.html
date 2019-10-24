@@ -1,42 +1,66 @@
 <div class="animated fadeIn">
     <h4>Pick and Pack</h4>
     <div class="form-group">
-        <button class="btn btn-primary" (click)="postSAP()">Post to SAP</button>
+        <button class="btn btn-primary" (click)="openModal(template)" [disabled]="checkedSO.length == 0">Post Pick
+            List</button>
     </div>
-    <table class="table table-hover table-sm">
-        <thead>
-            <tr>
-                <th>SO No.</th>
-                <th>Doc. Date</th>
-                <th>SO Type</th>
-                <th>BP Name</th>
-                <th>Branch</th>
-                <th>Item Code</th>
-                <th>Description</th>
-                <th>SO Qty</th>
-                <th>Qty To Post</th>
-                <th>Pick</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let i of openSalesOrders">
-                <td> {{ i.docNum }} </td>
-                <td> {{ i.docDate | date: 'MM-dd-yy' }} </td>
-                <td> {{ i.soType }} </td>
-                <td> {{ i.cardName }}</td>
-                <td> {{ i.branch }} </td>
-                <td> {{ i.itemCode }} </td>
-                <td> {{ i.dscription }} </td>
-                <td> {{ i.quantity }} </td>
-                <td>
-                    <input type="number" class="form-control form-control-sm" [(ngModel)]="i.qtyToPost">
-                </td>
-                <td class="text-center">
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" (change)="checkSO(i)">
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div style="overflow-y: auto; height: 400px;">
+        <table class="table table-hover table-sm">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Doc No.</th>
+                    <th>Doc. Date</th>
+                    <th>BP Name</th>
+                    <th>Item Code</th>
+                    <th>Description</th>
+                    <th>SO Qty</th>
+                    <th>In Stock</th>
+                    <th>Available</th>
+                    <th>Qty To Post</th>
+                    <th>Pick</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let i of openSalesOrders" [ngClass]="checkedSO.includes(i) ? 'table-success' : ''">
+                    <td> {{ i.type }} </td>
+                    <td> {{ i.docNum }} </td>
+                    <td> {{ i.docDate | date: 'dd-MM-yy' }} </td>
+                    <td> {{ i.branch }} </td>
+                    <td> {{ i.itemCode }} </td>
+                    <td> {{ i.dscription }} </td>
+                    <td> {{ i.openQty }} </td>
+                    <td> {{ i.inStock }} </td>
+                    <td> {{ i.available }} </td>
+                    <td>
+                        <input type="number" class="form-control form-control-sm" [(ngModel)]="i.qtyToPost">
+                    </td>
+                    <td class="text-center">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" (change)="checkSO(i)"
+                                [disabled]="validationCheck(i.qtyToPost, i.openQty)">
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <ngb-pagination></ngb-pagination>
+    </div>
 </div>
+<ng-template #template>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Pick List No {{ plNo }} </h4>
+        <button type="button" class="close" aria-label="close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="card-body">
+            <label for="plRemarks">Remarks (optional)</label>
+            <input type="text" class="form-control" [(ngModel)]="remarks">
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" (click)="updateList()">Post Transaction</button>
+    </div>
+</ng-template>

@@ -1,0 +1,77 @@
+<div class="animated fadeIn">
+    <h4>Sales Order Monitoring</h4>
+    <div class="form-group">
+        <button class="btn btn-primary" (click)="closeConfirm()" [disabled]="checkSOD.length === 0">Close Document</button>
+    </div>
+    <div style="overflow-y: auto; height: 400px;">
+        <table class="table table-hover table-sm">
+            <thead>
+                <tr>
+                    <th>SO No.</th>
+                    <th>Doc. Date</th>
+                    <th>Days Due</th>
+                    <th>SO Type</th>
+                    <th>BP Name</th>
+                    <th>Items</th>
+                    <th class="text-center">Close</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let i of soMonitoring" [ngClass]="checkSOD.includes(i.docEntry) ? 'table-success' : ''">
+                    <td> {{ i.docNum }} </td>
+                    <td> {{ i.docDate | date: 'dd-MM-yy' }} </td>
+                    <td> {{ i.daysDue }} </td>
+                    <td> {{ i.soType }} </td>
+                    <td> {{ i.bpName }} </td>
+                    <td>
+                        <button type="button" class="btn btn-link btn-sm" (click)="openModal(details, i.docNum)">
+                            View
+                        </button>
+                    </td>
+                    <td class="text-center">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" (change)="checkedSalesOrder(i.docEntry)">
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<ng-template #details>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Sales Order No {{ soNo }} </h4>
+        <button type="button" class="close" aria-label="close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div>
+            <strong>Item Details</strong>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th>PL No.</th>
+                        <th>Item Code</th>
+                        <th>Qty</th>
+                        <th>Remarks</th>
+                        <th>Date</th>
+                        <th>User</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let i of soMonitoringDetails">
+                        <td> {{ i.plNo}} </td>
+                        <td> {{ i.itemCode }}</td>
+                        <td> {{ i.qty }} </td>
+                        <td> {{ i.remarks }} </td>
+                        <td> {{ i.date | date: 'dd-MM-yy' }} </td>
+                        <td> {{ i.user }} </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</ng-template>

@@ -14,6 +14,10 @@ namespace AspNetAdvantix.Model
 
             }
         public virtual DbQuery<OpenSalesOrder> OpenSalesOrder { get; set; }
+        public virtual DbQuery<PickedSalesOrder> PickedSalesOrder { get; set; }
         public virtual DbQuery<Picklist> Picklist { get; set; }
+        public virtual DbQuery<PickListNo> PickListNo { get; set; }
+        public virtual DbQuery<SalesOrderMonitoring> SalesOrderMonitoring { get; set; }
+        public virtual DbQuery<SalesOrderMonitoringDetails> SalesOrderMonitoringDetails { get; set; }
     }
 }

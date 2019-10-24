@@ -8,8 +8,15 @@ import { P404Component } from './views/error/404.component';
 import { P500Component } from './views/error/500.component';
 import { LoginComponent } from './views/login/login.component';
 import { RegisterComponent } from './views/register/register.component';
+
+// Guards
+import { AuthGuard } from './_guards/auth.guard';
+import { LoginGuard } from './_guards/login.guard';
+
+// Modules
 import { PickAndPackComponent } from './views/pickandpack/pickandpack.component';
 import { PicklistComponent } from './views/picklist/picklist.component';
+import { OpenSOComponent } from './views/openso/openso.component';
 
 export const routes: Routes = [
   {
@@ -34,6 +41,7 @@ export const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
+    canActivate: [LoginGuard],
     data: {
       title: 'Login Page'
     }
@@ -48,6 +56,7 @@ export const routes: Routes = [
   {
     path: '',
     component: DefaultLayoutComponent,
+    canActivate: [AuthGuard],
     data: {
       title: 'Home'
     },
@@ -64,6 +73,13 @@ export const routes: Routes = [
         component: PicklistComponent,
         data: {
           title: 'Picklist'
+        }
+      },
+      {
+        path: 'openso',
+        component: OpenSOComponent,
+        data: {
+          title: 'Open SO'
         }
       },
       {
