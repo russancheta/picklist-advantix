@@ -10,6 +10,7 @@ namespace AspNetAdvantix.Model
         public string SOType { get; set; }
         public string CardCode { get; set; }
         public string CardName { get; set; }
+        public string BPName { get; set; }
         public string WhseBranch { get; set; }
         public string ItemCode { get; set; }
         public string Dscription { get; set; }
@@ -21,6 +22,6 @@ namespace AspNetAdvantix.Model
         public string Branch { get; set; }
         public int DocEntry { get; set; }
         public int LineNum { get; set; }
-        public int ObjType { get; set; }
+        public string ObjType { get; set; }
     }
 }

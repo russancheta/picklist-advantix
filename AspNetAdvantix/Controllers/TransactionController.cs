@@ -219,16 +219,17 @@ namespace AspNetAdvantix.Controllers
         }
 
         [HttpPut("closeSO")]
-        public ActionResult<ResultResponse> closeSO(int[] docEntryArray, string docType, string token)
+        public ActionResult<ResultResponse> closeSO(List<ForClosingViewModel> list, string token)
         {
             ResultResponse response = new ResultResponse();
             Company oCompany = DIApi.companyLoggedIn.Find(c => c.Token == token).SAPCompany;
-            if (docType == "SO")
+            foreach (var obj in list)
             {
-                Documents oSalesOrder = (SAPbobsCOM.Documents)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oOrders);
-                for (int i = 0; i < docEntryArray.Length; i++)
+                if (obj.Type == "SO")
                 {
-                    oSalesOrder.GetByKey(docEntryArray[i]);
+                    Console.WriteLine("CLOSE SO");
+                    Documents oSalesOrder = (SAPbobsCOM.Documents)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oOrders);
+                    oSalesOrder.GetByKey(obj.DocEntry);
                     int iRetCode = oSalesOrder.Close();
                     if (iRetCode != 0)
                     {
@@ -239,14 +240,11 @@ namespace AspNetAdvantix.Controllers
                         };
                     }
                 }
-            }
-            else
-            {
-                Console.WriteLine("close itr");
-                StockTransfer oInvTransferReq = (SAPbobsCOM.StockTransfer)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oInventoryTransferRequest);
-                for (int i = 0; i < docEntryArray.Length; i++)
+                else
                 {
-                    oInvTransferReq.GetByKey(docEntryArray[i]);
+                    Console.WriteLine("CLOSE ITR");
+                    StockTransfer oInvTransferReq = (SAPbobsCOM.StockTransfer)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oInventoryTransferRequest);
+                    oInvTransferReq.GetByKey(obj.DocEntry);
                     int iRetCode = oInvTransferReq.Close();
                     if (iRetCode != 0)
                     {
@@ -258,7 +256,6 @@ namespace AspNetAdvantix.Controllers
                     }
                 }
             }
-
             return new ResultResponse
             {
                 Result = "Success",

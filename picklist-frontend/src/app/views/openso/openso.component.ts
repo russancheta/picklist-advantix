@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { Service, SalesOrderMonitoring, SalesOrderMonitoringDetails, OpenSalesOrder } from '../../core/api.client';
+import { Service, SalesOrderMonitoring, SalesOrderMonitoringDetails, OpenSalesOrder, ForClosingViewModel } from '../../core/api.client';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { AuthService } from '../../shared/auth.service';
 import Swal from 'sweetalert2';
@@ -14,7 +14,7 @@ export class OpenSOComponent implements OnInit {
   soMonitoring: SalesOrderMonitoring[] = [];
   soMonitoringDetails: SalesOrderMonitoringDetails[] = [];
   checkedSO: SalesOrderMonitoring[] = [];
-  checkSOD: number[] = [];
+  checkSOD: ForClosingViewModel[] = [];
   docEntryList = [];
 
   soNo = '';
@@ -44,12 +44,15 @@ export class OpenSOComponent implements OnInit {
     })
   }
 
-  checkedSalesOrder(docEntry: number) {
-    if (this.checkSOD.includes(docEntry)) {
-      const i = this.checkSOD.indexOf(docEntry);
+  checkedSalesOrder(docEntry: number, type: string) {
+    const o = new ForClosingViewModel();
+    o.docEntry = docEntry;
+    o.type = type;
+    if (this.checkSOD.includes(o)) {
+      const i = this.checkSOD.indexOf(o);
       this.checkSOD.splice(i, 1);
     } else {
-      this.checkSOD.push(docEntry);
+      this.checkSOD.push(o);
     }
     console.table(this.checkSOD);
   }

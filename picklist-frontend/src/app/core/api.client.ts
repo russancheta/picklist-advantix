@@ -875,7 +875,7 @@ export class Service {
      * @param body (optional) 
      * @return Success
      */
-    closeSO(token: string | undefined, body: number[] | undefined): Observable<ResultResponse> {
+    closeSO(token: string | undefined, body: ForClosingViewModel[] | undefined): Observable<ResultResponse> {
         let url_ = this.baseUrl + "/api/controller/closeSO?";
         if (token === null)
             throw new Error("The parameter 'token' cannot be null.");
@@ -1135,6 +1135,7 @@ export class OpenSalesOrder implements IOpenSalesOrder {
     soType?: string | undefined;
     cardCode?: string | undefined;
     cardName?: string | undefined;
+    bpName?: string | undefined;
     whseBranch?: string | undefined;
     itemCode?: string | undefined;
     dscription?: string | undefined;
@@ -1165,6 +1166,7 @@ export class OpenSalesOrder implements IOpenSalesOrder {
             this.soType = data["soType"];
             this.cardCode = data["cardCode"];
             this.cardName = data["cardName"];
+            this.bpName = data["bpName"];
             this.whseBranch = data["whseBranch"];
             this.itemCode = data["itemCode"];
             this.dscription = data["dscription"];
@@ -1195,6 +1197,7 @@ export class OpenSalesOrder implements IOpenSalesOrder {
         data["soType"] = this.soType;
         data["cardCode"] = this.cardCode;
         data["cardName"] = this.cardName;
+        data["bpName"] = this.bpName;
         data["whseBranch"] = this.whseBranch;
         data["itemCode"] = this.itemCode;
         data["dscription"] = this.dscription;
@@ -1218,6 +1221,7 @@ export interface IOpenSalesOrder {
     soType?: string | undefined;
     cardCode?: string | undefined;
     cardName?: string | undefined;
+    bpName?: string | undefined;
     whseBranch?: string | undefined;
     itemCode?: string | undefined;
     dscription?: string | undefined;
@@ -1385,6 +1389,7 @@ export interface IPickListNo {
 }
 
 export class SalesOrderMonitoring implements ISalesOrderMonitoring {
+    type?: string | undefined;
     docEntry?: number;
     docNum?: number;
     docDate?: Date;
@@ -1403,6 +1408,7 @@ export class SalesOrderMonitoring implements ISalesOrderMonitoring {
 
     init(data?: any) {
         if (data) {
+            this.type = data["type"];
             this.docEntry = data["docEntry"];
             this.docNum = data["docNum"];
             this.docDate = data["docDate"] ? new Date(data["docDate"].toString()) : <any>undefined;
@@ -1421,6 +1427,7 @@ export class SalesOrderMonitoring implements ISalesOrderMonitoring {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["type"] = this.type;
         data["docEntry"] = this.docEntry;
         data["docNum"] = this.docNum;
         data["docDate"] = this.docDate ? this.docDate.toISOString() : <any>undefined;
@@ -1432,6 +1439,7 @@ export class SalesOrderMonitoring implements ISalesOrderMonitoring {
 }
 
 export interface ISalesOrderMonitoring {
+    type?: string | undefined;
     docEntry?: number;
     docNum?: number;
     docDate?: Date;
@@ -1758,6 +1766,46 @@ export interface IPicklist {
     remarks?: string | undefined;
     soType?: string | undefined;
     branch?: string | undefined;
+}
+
+export class ForClosingViewModel implements IForClosingViewModel {
+    docEntry?: number;
+    type?: string | undefined;
+
+    constructor(data?: IForClosingViewModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.docEntry = data["docEntry"];
+            this.type = data["type"];
+        }
+    }
+
+    static fromJS(data: any): ForClosingViewModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new ForClosingViewModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["docEntry"] = this.docEntry;
+        data["type"] = this.type;
+        return data; 
+    }
+}
+
+export interface IForClosingViewModel {
+    docEntry?: number;
+    type?: string | undefined;
 }
 
 export class ApiException extends Error {

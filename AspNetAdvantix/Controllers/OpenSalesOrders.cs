@@ -42,6 +42,7 @@ namespace AspNetAdvantix.Controllers
                     end 'SOType',
                     a.CardCode,
                     a.CardName,
+                    (select z.Block from CRD1 z where z.CardCode = a.CardCode and z.Address = a.U_ITR_BRANCH) 'BPName',
                     a.U_ITR_BRANCH 'WhseBranch',
                     b.ItemCode,
                     b.Dscription,
@@ -66,10 +67,10 @@ namespace AspNetAdvantix.Controllers
                     a.DocStatus = 'O'
                     and a.CANCELED = 'N'
                     and b.LineStatus = 'O'
-                    and ISNULL(b.U_SO_PickedQty, 0) = 0
-
+                    and b.OpenQty > 0
+                    
                 union all
-
+                
                 select
 					'ITR' 'Type',
                     a.DocNum,
@@ -77,6 +78,7 @@ namespace AspNetAdvantix.Controllers
                     'Consignment' 'SOType',
                     a.CardCode,
                     a.CardName,
+                    (select z.Block from CRD1 z where z.CardCode = a.CardCode and z.Address = a.U_ITR_BRANCH) 'BPName',
                     a.U_ITR_BRANCH 'WhseBranch',
                     b.ItemCode,
                     b.Dscription,
@@ -99,10 +101,10 @@ namespace AspNetAdvantix.Controllers
                     inner join WTQ1 b on a.DocEntry = b.DocEntry
                 where
                     a.DocStatus = 'O'
+                    and a.Series = 129
                     and a.CANCELED = 'N'
                     and b.LineStatus = 'O'
-                    and ISNULL(b.U_SO_PickedQty, 0) = 0
-					and a.Series = 129";
+                    and b.OpenQty > 0";
             var openSO = await _context.OpenSalesOrder.FromSql(openSOQuery).ToListAsync();
             return openSO;
         }
@@ -144,10 +146,10 @@ namespace AspNetAdvantix.Controllers
                     isnull(b.U_SO_PLNo, '') <> ''
                     and a.U_SO_Released = 'N'
                     and b.LineStatus = 'O'
-
-				union all
-
-				select
+                    
+                union all
+                
+                select
 					'ITR' 'Type',
                     a.DocNum,
                     a.CardCode,

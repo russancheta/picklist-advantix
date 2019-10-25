@@ -3,22 +3,27 @@ import { Service, PickedSalesOrder, OpenSalesOrder } from '../../core/api.client
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../shared/auth.service';
+import { environment } from '../../../environments/environment';
+import {ReportService} from '../../shared/report.service';
 @Component({
   selector: 'app-picklist',
   templateUrl: './picklist.component.html',
-  styleUrls: ['./picklist.component.scss']
+  styleUrls: ['./picklist.component.scss'],
+  providers: [ReportService]
 })
 export class PicklistComponent implements OnInit {
 
   pickList: PickedSalesOrder[] = [];
   checkedPL: PickedSalesOrder[] = [];
+  plNo = '';
 
   modalRef: BsModalRef;
 
   constructor(
     private apiService: Service,
     private modalService: BsModalService,
-    private authService: AuthService
+    private authService: AuthService,
+    private reportService: ReportService
   ) { }
 
   ngOnInit() {
@@ -119,6 +124,26 @@ export class PicklistComponent implements OnInit {
       showConfirmButton: false,
       allowOutsideClick: false
     })
+  }
+
+  viewReport(plNo: number) {
+    const ePLNO = this.reportService.setEncryptedData(plNo.toString());
+    window.open(
+      environment.REPORT_BASE_URL + '/Report/PickList?'
+      + 'pickListNo=' + ePLNO, '_blank'
+    );
+  }
+
+  openModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template);
+  }
+
+  closeModal() {
+    this.modalRef.hide();
+  }
+
+  checkPlNo() {
+    console.log(this.plNo);
   }
 
 }
