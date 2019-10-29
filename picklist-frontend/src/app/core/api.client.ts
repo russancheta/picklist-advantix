@@ -638,6 +638,66 @@ export class Service {
     }
 
     /**
+     * @param docDate (optional) 
+     * @return Success
+     */
+    getWebPLNo(docDate: Date | undefined): Observable<WebPLNo[]> {
+        let url_ = this.baseUrl + "/api/controller/getWebPLNo?";
+        if (docDate === null)
+            throw new Error("The parameter 'docDate' cannot be null.");
+        else if (docDate !== undefined)
+            url_ += "docDate=" + encodeURIComponent(docDate ? "" + docDate.toJSON() : "") + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetWebPLNo(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetWebPLNo(<any>response_);
+                } catch (e) {
+                    return <Observable<WebPLNo[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<WebPLNo[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetWebPLNo(response: HttpResponseBase): Observable<WebPLNo[]> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(WebPLNo.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<WebPLNo[]>(<any>null);
+    }
+
+    /**
      * @param userCode (optional) 
      * @param body (optional) 
      * @return Success
@@ -1508,8 +1568,45 @@ export interface ISalesOrderMonitoringDetails {
     userName?: string | undefined;
 }
 
+export class WebPLNo implements IWebPLNo {
+    plNo?: number | undefined;
+
+    constructor(data?: IWebPLNo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.plNo = data["plNo"];
+        }
+    }
+
+    static fromJS(data: any): WebPLNo {
+        data = typeof data === 'object' ? data : {};
+        let result = new WebPLNo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["plNo"] = this.plNo;
+        return data; 
+    }
+}
+
+export interface IWebPLNo {
+    plNo?: number | undefined;
+}
+
 export class UpdateSalesOrder implements IUpdateSalesOrder {
     docEntry?: number;
+    docNum?: number;
     lineNum?: number;
     itemCode?: string | undefined;
     pickedQty?: number;
@@ -1530,6 +1627,7 @@ export class UpdateSalesOrder implements IUpdateSalesOrder {
     init(data?: any) {
         if (data) {
             this.docEntry = data["docEntry"];
+            this.docNum = data["docNum"];
             this.lineNum = data["lineNum"];
             this.itemCode = data["itemCode"];
             this.pickedQty = data["pickedQty"];
@@ -1550,6 +1648,7 @@ export class UpdateSalesOrder implements IUpdateSalesOrder {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["docEntry"] = this.docEntry;
+        data["docNum"] = this.docNum;
         data["lineNum"] = this.lineNum;
         data["itemCode"] = this.itemCode;
         data["pickedQty"] = this.pickedQty;
@@ -1563,6 +1662,7 @@ export class UpdateSalesOrder implements IUpdateSalesOrder {
 
 export interface IUpdateSalesOrder {
     docEntry?: number;
+    docNum?: number;
     lineNum?: number;
     itemCode?: string | undefined;
     pickedQty?: number;

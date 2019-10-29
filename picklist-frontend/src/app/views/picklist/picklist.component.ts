@@ -1,10 +1,11 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { Service, PickedSalesOrder, OpenSalesOrder } from '../../core/api.client';
+import { Service, PickedSalesOrder, OpenSalesOrder, WebPLNo } from '../../core/api.client';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../shared/auth.service';
 import { environment } from '../../../environments/environment';
-import {ReportService} from '../../shared/report.service';
+import { ReportService } from '../../shared/report.service';
+
 @Component({
   selector: 'app-picklist',
   templateUrl: './picklist.component.html',
@@ -15,9 +16,14 @@ export class PicklistComponent implements OnInit {
 
   pickList: PickedSalesOrder[] = [];
   checkedPL: PickedSalesOrder[] = [];
+  webPLNo: WebPLNo[] = [];
   plNo = '';
 
   modalRef: BsModalRef;
+
+  dtpPLDate = new Date();
+
+  selectedPL: number = 0;
 
   constructor(
     private apiService: Service,
@@ -126,8 +132,8 @@ export class PicklistComponent implements OnInit {
     })
   }
 
-  viewReport(plNo: number) {
-    const ePLNO = this.reportService.setEncryptedData(plNo.toString());
+  viewReport() {
+    const ePLNO = this.reportService.setEncryptedData(this.selectedPL.toString());
     window.open(
       environment.REPORT_BASE_URL + '/Report/PickList?'
       + 'pickListNo=' + ePLNO, '_blank'
@@ -144,6 +150,19 @@ export class PicklistComponent implements OnInit {
 
   checkPlNo() {
     console.log(this.plNo);
+  }
+
+  getAllPickList(date: Date) {
+    this.apiService.getWebPLNo(date).subscribe(res => { this.webPLNo = res; });
+  }
+
+  findPLNo() {
+    this.getAllPickList(this.dtpPLDate);
+    console.log(this.webPLNo);
+  }
+
+  selectedPLNo(plNo: any) {
+    this.selectedPL = plNo;
   }
 
 }

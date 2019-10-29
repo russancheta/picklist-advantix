@@ -41,6 +41,7 @@ export class OpenSOComponent implements OnInit {
   getSOMonitDetails(docnum: number) {
     this.apiService.getSalesOrderMonitoringDetails(docnum).subscribe(res => {
       this.soMonitoringDetails = res;
+      console.table(res);
     })
   }
 
@@ -98,7 +99,7 @@ export class OpenSOComponent implements OnInit {
   }
 
   openModal(details: TemplateRef<any>, docNum: number) {
-    this.modalRef = this.modalService.show(details);
+    this.modalRef = this.modalService.show(details, {class: 'modal-lg'});
     this.getSOMonitDetails(docNum);
     this.soNo = docNum.toString();
   }

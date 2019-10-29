@@ -52,6 +52,7 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ChartsModule } from 'ng2-charts';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ModalModule } from 'ngx-bootstrap';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 // NSWAG client
 import { API_BASE_URL } from './core/api.client';
@@ -79,7 +80,8 @@ import { ErrorInterceptor } from './_helpers/error.interceptor';
     NgbModule,
     FormsModule,
     ReactiveFormsModule,
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    BsDatepickerModule.forRoot()
   ],
   declarations: [
     AppComponent,

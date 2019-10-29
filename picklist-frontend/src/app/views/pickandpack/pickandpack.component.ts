@@ -1,8 +1,11 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { UpdateSalesOrder, Service, OpenSalesOrder } from '../../core/api.client';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { UpdateSalesOrder, Service, OpenSalesOrder, WebPLNo } from '../../core/api.client';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap';
 import { AuthService } from '../../shared/auth.service';
+import { environment } from '../../../environments/environment';
+import { ReportService } from '../../shared/report.service';
 import Swal from 'sweetalert2';
+import { NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-pickandpack',
@@ -21,14 +24,17 @@ export class PickAndPackComponent implements OnInit {
   comments: string;
 
   modalRef: BsModalRef;
+  modalOption: ModalOptions = {};
 
   plNo: number = 0;
   remarks: string = '';
+  generateFormBtnDisable = true;
 
   constructor(
     private apiService: Service,
     private authService: AuthService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private reportService: ReportService
   ) { }
 
   ngOnInit() {
@@ -49,6 +55,7 @@ export class PickAndPackComponent implements OnInit {
     this.checkedSO.forEach(o => {
       const updateSO = new UpdateSalesOrder();
       updateSO.docEntry = o.docEntry;
+      updateSO.docNum = o.docNum;
       updateSO.lineNum = o.lineNum;
       updateSO.pickedQty = o.qtyToPost;
       updateSO.itemCode = o.itemCode;
@@ -57,10 +64,11 @@ export class PickAndPackComponent implements OnInit {
       updateSO.objType = o.objType;
       listupdateSo.push(updateSO);
     });
-    this.apiService.updateSalesOrder(this.authService.getUserName() ,listupdateSo).subscribe(res => {
+    this.apiService.updateSalesOrder(this.authService.getUserName(), listupdateSo).subscribe(res => {
       if (res.result == 'Success') {
-        this.modalRef.hide();
-        this.checkedSO = [];
+        this.generateFormBtnDisable = false;
+        // this.modalRef.hide();
+        // this.checkedSO = [];
         this.getOpenSalesOrders();
         Swal.fire({
           type: 'success',
@@ -101,18 +109,30 @@ export class PickAndPackComponent implements OnInit {
     });
   }
 
+  viewReport() {
+    const ePLNO = this.reportService.setEncryptedData(this.plNo.toString());
+    window.open(
+      environment.REPORT_BASE_URL + '/Report/PickList?'
+      + 'pickListNo=' + ePLNO, '_blank'
+    );
+    console.log(this.plNo);
+  }
+
   openModal(template: TemplateRef<any>) {
+    this.generateFormBtnDisable = true;
     this.apiService.getPicklistNo().subscribe(
       res => {
         this.plNo = res.pickListNum;
       }
     );
     this.remarks = '';
-    this.modalRef = this.modalService.show(template);
+    this.modalRef = this.modalService.show(template, { ignoreBackdropClick: true, keyboard: false, class: 'modal-xl' });
   }
 
   closeModal() {
     this.modalRef.hide();
+    this.checkedSO = [];
+    this.getOpenSalesOrders();
   }
 
   showLoading() {
@@ -121,6 +141,22 @@ export class PickAndPackComponent implements OnInit {
       text: 'Please wait',
       showConfirmButton: false,
       allowOutsideClick: false
+    });
+  }
+
+  showAlert() {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to close this window",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes!'
+    }).then((result) => {
+      if (result.value) {
+        this.closeModal();
+      }
     });
   }
 

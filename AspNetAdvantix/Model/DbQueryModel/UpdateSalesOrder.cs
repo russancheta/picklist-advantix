@@ -5,6 +5,7 @@ namespace AspNetAdvantix.Model
     public partial class UpdateSalesOrder
     {
         public int DocEntry { get; set; }
+        public int DocNum { get; set; }
         public int LineNum { get; set; }
         public string ItemCode { get; set; }
         public decimal PickedQty { get; set; }

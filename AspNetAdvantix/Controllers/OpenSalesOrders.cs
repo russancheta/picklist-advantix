@@ -250,6 +250,20 @@ namespace AspNetAdvantix.Controllers
             return soMonitDetails;
         }
 
+        [HttpGet("getWebPLNo")]
+        public async Task<ActionResult<IEnumerable<WebPLNo>>> getWebPLNo(DateTime docDate)
+        {
+            var webPLNoQuery = @"
+                select distinct
+                    a.U_SO_PLNo 'PLNo'
+                from
+                    [@PICK_LIST_H] a
+                where
+                    dateadd(dd, datediff(dd, 0, a.U_SO_Date), 0) = {0}";
+            var webPLNo = await _context.WebPLNo.FromSql(webPLNoQuery, docDate.Date).ToListAsync();
+            return webPLNo;
+        }
+
         [HttpPut("updateSalesOrder")]
         public ActionResult<ResultResponse> updateSalesOrder(List<UpdateSalesOrder> listUpdateSalesOrder, string userCode)
         {
@@ -313,7 +327,7 @@ namespace AspNetAdvantix.Controllers
 
                 {
                     DocEntry = iDocEntry,
-                    USoDocNum = obj.DocEntry,
+                    USoDocNum = obj.DocNum,
                     USoPlno = obj.PLNo,
                     USoItemCode = obj.ItemCode,
                     USoQty = obj.PickedQty,

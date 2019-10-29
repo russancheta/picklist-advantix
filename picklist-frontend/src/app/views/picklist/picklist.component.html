@@ -50,17 +50,25 @@
 <ng-template #template>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Pick List Form</h4>
+
         <button type="button" class="close" aria-label="close" (click)="closeModal()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="modal-body">
-        <div class="card-body">
+        <div class="form-group">
+            <label>Date</label>
+            <input type="text" class="form-control" #dp="bsDatepicker" bsDatepicker [(ngModel)]="dtpPLDate"
+                (ngModelChange)="findPLNo()">
+        </div>
+        <div class="form-group">
             <label for="plNo">Pick List No.</label>
-            <input type="number" class="form-control" [(ngModel)]="plNo">
+            <select class="form-control form-control-sm" (change)="selectedPLNo($event.target.value)">
+                <option *ngFor="let o of webPLNo" [value]="o.plNo">{{ o.plNo }}</option>
+            </select>
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" (click)="viewReport(plNo)">Generate Form</button>
+        <button class="btn btn-primary" (click)="viewReport()">Generate Form</button>
     </div>
 </ng-template>

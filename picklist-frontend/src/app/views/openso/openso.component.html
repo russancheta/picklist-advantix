@@ -20,7 +20,7 @@
                 <tr *ngFor="let i of soMonitoring" [ngClass]="checkSOD.includes(i.docEntry) ? 'table-success' : ''">
                     <td> {{ i.type }} </td>
                     <td> {{ i.docNum }} </td>
-                    <td> {{ i.docDate | date: 'dd-MM-yy' }} </td>
+                    <td> {{ i.docDate | date: 'yyyy-MM-dd' }} </td>
                     <td> {{ i.daysDue }} </td>
                     <td> {{ i.bpName }} </td>
                     <td>
@@ -55,7 +55,7 @@
                     <tr>
                         <th>PL No.</th>
                         <th>Item Code</th>
-                        <th>Qty</th>
+                        <th>Picked Qty</th>
                         <th>Remarks</th>
                         <th>Date</th>
                         <th>User</th>
@@ -67,8 +67,8 @@
                         <td> {{ i.itemCode }}</td>
                         <td> {{ i.qty }} </td>
                         <td> {{ i.remarks }} </td>
-                        <td> {{ i.date | date: 'dd-MM-yy' }} </td>
-                        <td> {{ i.user }} </td>
+                        <td> {{ i.date | date: 'yyyy-MM-dd' }} </td>
+                        <td> {{ i.userName }} </td>
                     </tr>
                 </tbody>
             </table>

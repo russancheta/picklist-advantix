@@ -49,18 +49,47 @@
 </div>
 <ng-template #template>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Pick List No {{ plNo }} </h4>
-        <button type="button" class="close" aria-label="close" (click)="closeModal()">
+        <h4 class="modal-title" id="modal-basic-title">Pick List No <span class="text-info">{{ plNo }}</span> </h4>
+        <button type="button" class="close" aria-label="close" (click)="showAlert()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="modal-body">
-        <div class="card-body">
+        <div style="overflow-y: auto; height: 250px;">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th width="2%">#</th>
+                        <th>Doc No.</th>
+                        <th>Doc. Date</th>
+                        <th>BP Name</th>
+                        <th>Item Code</th>
+                        <th>Description</th>
+                        <th>Picked Qty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let o of checkedSO; let i = index">
+                        <th> {{ i + 1 }} </th>
+                        <td> {{ o.docNum }} </td>
+                        <td> {{ o.docDate | date: 'yyyy-MM-dd' }} </td>
+                        <td> {{ o.bpName }} </td>
+                        <td> {{ o.itemCode }} </td>
+                        <td> {{ o.dscription }} </td>
+                        <td> {{ o.qtyToPost }} </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+        <div class="form-group">
             <label for="plRemarks">Remarks (optional)</label>
-            <input type="text" class="form-control" [(ngModel)]="remarks">
+            <textarea type="text" class="form-control" [(ngModel)]="remarks" rows="3"></textarea>
         </div>
     </div>
     <div class="modal-footer">
         <button class="btn btn-primary" (click)="updateList()">Post Transaction</button>
+        <button class="btn btn-primary" [disabled]="generateFormBtnDisable" (click)="viewReport(plNo)">Generate
+            Form</button>
     </div>
 </ng-template>
