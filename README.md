@@ -1,2 +1,2 @@
 # picklist-advantix
-sample
+Web Pick List
