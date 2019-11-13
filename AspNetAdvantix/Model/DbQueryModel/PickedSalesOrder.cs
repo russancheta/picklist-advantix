@@ -14,7 +14,7 @@ namespace AspNetAdvantix.Model
         public string ItemCode { get; set; }
         public decimal PickedQty { get; set; }
         public decimal QtyToPost { get; set; }
-        public int PLNo { get; set; }
+        public int? PLNo { get; set; }
         public DateTime? PLDate { get; set; }
         public string PLRemarks { get; set; }
         public string PLUser { get; set; }

@@ -1,52 +1,54 @@
 <div class="animated fadeIn">
     <h4>Pick List</h4>
     <div class="form-group">
-        <button class="btn btn-primary" (click)="openModal(template)">Generate Pick List</button>
-    </div>
-    <div class="form-group">
         <button class="btn btn-primary" (click)="transactionConfirm()" [disabled]="checkedPL.length == 0">Post
             Transactions</button>
     </div>
-    <div style="overflow-y: auto; height: 400px;">
-        <table class="table table-hover table-sm">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Pick List No.</th>
-                    <th>Doc No.</th>
-                    <th>Pick List Date</th>
-                    <th>BP Name</th>
-                    <th>Description</th>
-                    <th>Picked Qty</th>
-                    <th>In Stock</th>
-                    <th>Qty To Post</th>
-                    <th>Pick</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let i of pickList" [ngClass]="checkedPL.includes(i) ? 'table-success' : ''">
-                    <td> {{ i.type }} </td>
-                    <td> {{ i.plNo }} </td>
-                    <td> {{ i.docNum }} </td>
-                    <td> {{ i.plDate | date: 'dd-MM-yy'}}</td>
-                    <td> {{ i.bpName }} </td>
-                    <td> {{ i.dscription }} </td>
-                    <td> {{ i.pickedQty }} </td>
-                    <td> {{ i.inStock }} </td>
-                    <td>
-                        <input type="number" class="form-control form-control-sm" [(ngModel)]="i.qtyToPost">
-                    </td>
-                    <td class="text-center">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" (change)="checkPicked(i)"
-                                [disabled]="validationCheck(i.qtyToPost, i.pickedQty, i.inStock)">
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="card">
+        <div style="overflow-y: auto; height: 400px; display: block">
+            <table class="table table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Pick List No.</th>
+                        <th>Doc No.</th>
+                        <th>Pick List Date</th>
+                        <th>BP Name</th>
+                        <th>Description</th>
+                        <th>Picked Qty</th>
+                        <th>In Stock</th>
+                        <th>Qty To Post</th>
+                        <th>Pick</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let i of pickList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize" 
+                        [ngClass]="checkedPL.includes(i) ? 'table-success' : ''">
+                        <td> {{ i.type }} </td>
+                        <td> {{ i.plNo }} </td>
+                        <td> {{ i.docNum }} </td>
+                        <td> {{ i.plDate | date: 'yy-MM-dd'}}</td>
+                        <td> {{ i.bpName }} </td>
+                        <td> {{ i.dscription }} </td>
+                        <td> {{ i.pickedQty }} </td>
+                        <td> {{ i.inStock }} </td>
+                        <td>
+                            <input type="number" class="form-control form-control-sm" [(ngModel)]="i.qtyToPost">
+                        </td>
+                        <td class="text-center">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" (change)="checkPicked(i)"
+                                    [disabled]="validationCheck(i.qtyToPost, i.pickedQty, i.inStock)">
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="pickList.length"></ngb-pagination>
 </div>
+<!--
 <ng-template #template>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Pick List Form</h4>
@@ -72,3 +74,4 @@
         <button class="btn btn-primary" (click)="viewReport()">Generate Form</button>
     </div>
 </ng-template>
+-->

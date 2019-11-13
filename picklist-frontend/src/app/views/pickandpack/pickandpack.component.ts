@@ -26,9 +26,19 @@ export class PickAndPackComponent implements OnInit {
   modalRef: BsModalRef;
   modalOption: ModalOptions = {};
 
+  dtpPLDate = new Date();
+
+  selectedPL: number = 0;
+
+  webPLNo: WebPLNo[] = [];
   plNo: number = 0;
   remarks: string = '';
   generateFormBtnDisable = true;
+  postPickListBtnDisable = false;
+
+  // pagination
+  page = 1;
+  pageSize = 20;
 
   constructor(
     private apiService: Service,
@@ -39,6 +49,7 @@ export class PickAndPackComponent implements OnInit {
 
   ngOnInit() {
     this.getOpenSalesOrders();
+    this.getAllPickList(this.dtpPLDate);
   }
 
   validationCheck(a: number, b: number, c: number) {
@@ -67,6 +78,7 @@ export class PickAndPackComponent implements OnInit {
     this.apiService.updateSalesOrder(this.authService.getUserName(), listupdateSo).subscribe(res => {
       if (res.result == 'Success') {
         this.generateFormBtnDisable = false;
+        this.postPickListBtnDisable = true;
         // this.modalRef.hide();
         // this.checkedSO = [];
         this.getOpenSalesOrders();
@@ -110,6 +122,7 @@ export class PickAndPackComponent implements OnInit {
   }
 
   viewReport() {
+    console.log(this.plNo.toString());
     const ePLNO = this.reportService.setEncryptedData(this.plNo.toString());
     window.open(
       environment.REPORT_BASE_URL + '/Report/PickList?'
@@ -127,6 +140,27 @@ export class PickAndPackComponent implements OnInit {
     );
     this.remarks = '';
     this.modalRef = this.modalService.show(template, { ignoreBackdropClick: true, keyboard: false, class: 'modal-xl' });
+  }
+
+  pickListModal(pickandpack: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(pickandpack);
+  }
+
+  getAllPickList(date: Date) {
+    this.apiService.getWebPLNo(date).subscribe(res => { this.webPLNo = res; });
+  }
+
+  findPLNo() {
+    this.getAllPickList(this.dtpPLDate);
+    if (this.webPLNo.length !== 0) {
+      this.plNo = this.webPLNo[0].plNo;
+    }
+    console.log(this.webPLNo);
+  }
+
+  selectedPLNo(plNo: any) {
+    this.plNo = plNo;
+    console.log(plNo);
   }
 
   closeModal() {
@@ -210,9 +244,7 @@ export class PickAndPackComponent implements OnInit {
     //   //this.getOpenSalesOrders();
     // }
   }
-  */
-
-  /*
+  
   postOutright(data: OpenSalesOrder[]) {
 
     // header

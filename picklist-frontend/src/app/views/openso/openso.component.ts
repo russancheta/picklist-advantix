@@ -21,6 +21,10 @@ export class OpenSOComponent implements OnInit {
 
   modalRef: BsModalRef;
 
+  // pagination
+  page = 1;
+  pageSize = 20;
+
   constructor(
     private apiService: Service,
     private modalService: BsModalService,
@@ -99,7 +103,7 @@ export class OpenSOComponent implements OnInit {
   }
 
   openModal(details: TemplateRef<any>, docNum: number) {
-    this.modalRef = this.modalService.show(details, {class: 'modal-lg'});
+    this.modalRef = this.modalService.show(details, { class: 'modal-lg' });
     this.getSOMonitDetails(docNum);
     this.soNo = docNum.toString();
   }

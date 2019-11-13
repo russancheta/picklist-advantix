@@ -25,6 +25,10 @@ export class PicklistComponent implements OnInit {
 
   selectedPL: number = 0;
 
+  // pagination
+  page = 1;
+  pageSize = 20;
+
   constructor(
     private apiService: Service,
     private modalService: BsModalService,
@@ -58,6 +62,7 @@ export class PicklistComponent implements OnInit {
     const openSalesOrderList: OpenSalesOrder[] = [];
     this.checkedPL.forEach(o => {
       const openSO = new OpenSalesOrder();
+      openSO.docEntry = o.docEntry;
       openSO.docNum = o.docNum;
       openSO.cardCode = o.cardCode;
       openSO.cardName = o.cardName;
@@ -70,6 +75,7 @@ export class PicklistComponent implements OnInit {
       openSO.lineNum = o.lineNum;
       openSO.objType = o.objType;
       openSalesOrderList.push(openSO);
+      console.log(openSO);
     });
     this.apiService.postTransaction(this.authService.getToken(), openSalesOrderList).subscribe(
       res => {
@@ -97,6 +103,7 @@ export class PicklistComponent implements OnInit {
         });
         Swal.close();
       })
+    console.log(openSalesOrderList);
   }
 
   validationCheck(a: number, b: number, c: number) {

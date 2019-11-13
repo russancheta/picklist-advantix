@@ -49,10 +49,18 @@ namespace AspNetAdvantix.Controllers
                     if (container[0].SOType == "Consignment")
                     {
                         response = postIT(container, token);
+                        if (response.Result == "Failed")
+                        {
+                            return response;
+                        }
                     }
                     else
                     {
                         response = postDR(container, token);
+                        if (response.Result == "Failed")
+                        {
+                            return response;
+                        }
                     }
                     container = new List<OpenSalesOrder>();
                 }
@@ -136,7 +144,7 @@ namespace AspNetAdvantix.Controllers
                 oStockTransfer.ToWarehouse = list[0].WhseBranch;
                 oStockTransfer.UserFields.Fields.Item("U_IT_TYPE").Value = "SALES";
                 oStockTransfer.UserFields.Fields.Item("U_AR_SO").Value = list[0].DocNum.ToString();
-                oStockTransfer.Comments = $"Based on Sales Order {list[0].DocNum}";
+                oStockTransfer.Comments = $"Based on Inv. Transfer Req. {list[0].DocNum}";
                 foreach (var obj in list)
                 {
                     oStockTransfer.Lines.ItemCode = obj.ItemCode;
@@ -167,7 +175,7 @@ namespace AspNetAdvantix.Controllers
                 else
                 {
                     response.Result = "Failed";
-                    response.Message = DIApi._oCompany.GetLastErrorDescription();
+                    response.Message = oCompany.GetLastErrorDescription();
                     response.ResultData = "";
                 }
             }
@@ -182,6 +190,7 @@ namespace AspNetAdvantix.Controllers
             Documents oDeliveryNotes = (SAPbobsCOM.Documents)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oDeliveryNotes);
             oDeliveryNotes.CardCode = list[0].CardCode;
             oDeliveryNotes.UserFields.Fields.Item("U_DelStat").Value = "In-Transit";
+            oDeliveryNotes.Comments = $"Based on Sales Order {list[0].DocNum}";
             foreach (var obj in list)
             {
                 oDeliveryNotes.Lines.ItemCode = obj.ItemCode;

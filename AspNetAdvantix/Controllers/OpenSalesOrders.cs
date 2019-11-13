@@ -31,6 +31,9 @@ namespace AspNetAdvantix.Controllers
         {
             var openSOQuery = @"
                 select
+					a.*
+				from 
+                (select
 					'SO' 'Type',
                     a.DocNum,
                     a.DocDate,
@@ -47,7 +50,7 @@ namespace AspNetAdvantix.Controllers
                     b.ItemCode,
                     b.Dscription,
                     b.OpenQty,
-                    cast(0 as decimal(19,8)) 'QtyToPost',
+                    b.OpenQty 'QtyToPost',
 					(select z.OnHand from OITW z where z.ItemCode = b.ItemCode and z.WhsCode = '01') 'InStock',
                     (select z.OnHand - z.IsCommited from OITW z where z.ItemCode = b.ItemCode and z.WhsCode = '01') 'Available',
                     b.WhsCode,
@@ -68,6 +71,7 @@ namespace AspNetAdvantix.Controllers
                     and a.CANCELED = 'N'
                     and b.LineStatus = 'O'
                     and b.OpenQty > 0
+                    and isnull(b.U_SO_RELEASED, '') <> 'Y'
                     
                 union all
                 
@@ -83,7 +87,7 @@ namespace AspNetAdvantix.Controllers
                     b.ItemCode,
                     b.Dscription,
                     b.OpenQty,
-                    cast(0 as decimal(19,8)) 'QtyToPost',
+                    b.OpenQty 'QtyToPost',
 					(select z.OnHand from OITW z where z.ItemCode = b.ItemCode and z.WhsCode = '01') 'InStock',
                     (select z.OnHand - z.IsCommited from OITW z where z.ItemCode = b.ItemCode and z.WhsCode = '01') 'Available',
                     b.WhsCode,
@@ -104,7 +108,10 @@ namespace AspNetAdvantix.Controllers
                     and a.Series = 129
                     and a.CANCELED = 'N'
                     and b.LineStatus = 'O'
-                    and b.OpenQty > 0";
+                    and b.OpenQty > 0
+                    and isnull(b.U_SO_RELEASED, '') <> 'Y') a
+				order by
+					2";
             var openSO = await _context.OpenSalesOrder.FromSql(openSOQuery).ToListAsync();
             return openSO;
         }
@@ -114,6 +121,9 @@ namespace AspNetAdvantix.Controllers
         {
             var updatedQuery = @"
                 select
+                    a.*
+                from
+                (select
 					'SO' 'Type',
                     a.DocNum,
                     a.CardCode,
@@ -128,7 +138,7 @@ namespace AspNetAdvantix.Controllers
                     a.U_ITR_BRANCH 'WhseBranch',
                     b.ItemCode,
                     b.U_SO_PickedQty 'PickedQty',
-                    cast(0 as decimal(19,8)) 'QtyToPost',
+                    b.U_SO_PickedQty 'QtyToPost',
                     b.U_SO_PLNo 'PLNo',
                     DATEADD(dd, DATEDIFF(dd, 0, b.U_SO_PLDate), 0) 'PLDate',
                     b.U_SO_PLRemarks 'PLRemarks',
@@ -144,7 +154,7 @@ namespace AspNetAdvantix.Controllers
                     inner join RDR1 b on a.DocEntry = b.DocEntry
                 where
                     isnull(b.U_SO_PLNo, '') <> ''
-                    and a.U_SO_Released = 'N'
+                    and a.U_SO_Released = 'N' --or isnull(a.U_SO_Released,'') = ''
                     and b.LineStatus = 'O'
                     
                 union all
@@ -159,7 +169,7 @@ namespace AspNetAdvantix.Controllers
                     a.U_ITR_BRANCH 'WhseBranch',
                     b.ItemCode,
                     b.U_SO_PickedQty 'PickedQty',
-                    cast(0 as decimal(19,8)) 'QtyToPost',
+                    b.U_SO_PickedQty 'QtyToPost',
                     b.U_SO_PLNo 'PLNo',
                     DATEADD(dd, DATEDIFF(dd, 0, b.U_SO_PLDate), 0) 'PLDate',
                     b.U_SO_PLRemarks 'PLRemarks',
@@ -175,8 +185,11 @@ namespace AspNetAdvantix.Controllers
                     inner join WTQ1 b on a.DocEntry = b.DocEntry
                 where
                     isnull(b.U_SO_PLNo, '') <> ''
-                    and a.U_SO_Released = 'N'
-                    and b.LineStatus = 'O'";
+                    and a.U_SO_Released = 'N' --or isnull(a.U_SO_Released,'') = ''
+                    and b.LineStatus = 'O'
+                    and a.Series = 129) a
+                order by
+                    2";
             var updatedSO = await _context.PickedSalesOrder.FromSql(updatedQuery).ToListAsync();
             return updatedSO;
         }
@@ -194,6 +207,9 @@ namespace AspNetAdvantix.Controllers
         {
             var soMonitoringQuery = @"
                 select
+                    a.*
+                from
+                (select
 					'SO' 'Type',
                     a.DocEntry,
                     a.DocNum,
@@ -225,7 +241,9 @@ namespace AspNetAdvantix.Controllers
                     OWTQ a
                 where
                     a.DocStatus = 'O'
-					and a.Series = 129";
+					and a.Series = 129) a
+                order by
+                    3";
             var soMonitoring = await _context.SalesOrderMonitoring.FromSql(soMonitoringQuery).ToListAsync();
             return soMonitoring;
         }

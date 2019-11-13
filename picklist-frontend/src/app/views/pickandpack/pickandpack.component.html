@@ -1,51 +1,61 @@
 <div class="animated fadeIn">
     <h4>Pick and Pack</h4>
-    <div class="form-group">
-        <button class="btn btn-primary" (click)="openModal(template)" [disabled]="checkedSO.length == 0">Post Pick
-            List</button>
+    <div class="row">
+        <div class="col-auto">
+            <div class="form-group">
+                <button class="btn btn-primary" (click)="openModal(template)" [disabled]="checkedSO.length == 0">Post
+                    Pick List</button>
+            </div>
+        </div>
+        <div class="col-auto">
+            <div class="form-group">
+                <button class="btn btn-primary" (click)="pickListModal(pickandpack)">Generate Pick List</button>
+            </div>
+        </div>
     </div>
-    <div style="overflow-y: auto; height: 400px;">
-        <table class="table table-hover table-sm">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Doc No.</th>
-                    <th>Doc. Date</th>
-                    <th>BP Name</th>
-                    <th>Item Code</th>
-                    <th>Description</th>
-                    <th>SO Qty</th>
-                    <th>In Stock</th>
-                    <th>Available</th>
-                    <th>Qty To Post</th>
-                    <th>Pick</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let i of openSalesOrders" [ngClass]="checkedSO.includes(i) ? 'table-success' : ''">
-                    <td> {{ i.type }} </td>
-                    <td> {{ i.docNum }} </td>
-                    <td> {{ i.docDate | date: 'dd-MM-yy' }} </td>
-                    <td> {{ i.bpName }} </td>
-                    <td> {{ i.itemCode }} </td>
-                    <td> {{ i.dscription }} </td>
-                    <td> {{ i.openQty }} </td>
-                    <td> {{ i.inStock }} </td>
-                    <td> {{ i.available }} </td>
-                    <td>
-                        <input type="number" class="form-control form-control-sm" [(ngModel)]="i.qtyToPost">
-                    </td>
-                    <td class="text-center">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" (change)="checkSO(i)"
-                                [disabled]="validationCheck(i.qtyToPost, i.openQty)">
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <ngb-pagination></ngb-pagination>
+    <div class="card">
+        <div style="overflow-y: auto; height: 400px; display: block;">
+            <table class="table table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Doc No.</th>
+                        <th>Doc. Date</th>
+                        <th>BP Name</th>
+                        <th>Description</th>
+                        <th>Qty</th>
+                        <th>In Stock</th>
+                        <th>Available</th>
+                        <th>Qty To Post</th>
+                        <th>Pick</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let i of openSalesOrders | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize"
+                        [ngClass]="checkedSO.includes(i) ? 'table-success' : ''">
+                        <td> {{ i.type }} </td>
+                        <td> {{ i.docNum }} </td>
+                        <td> {{ i.docDate | date: 'yy-MM-dd' }} </td>
+                        <td> {{ i.bpName }} </td>
+                        <td> {{ i.dscription }} </td>
+                        <td> {{ i.openQty }} </td>
+                        <td> {{ i.inStock }} </td>
+                        <td> {{ i.available }} </td>
+                        <td>
+                            <input type="number" class="form-control form-control-sm" [(ngModel)]="i.qtyToPost">
+                        </td>
+                        <td class="text-center">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" (change)="checkSO(i)"
+                                    [disabled]="validationCheck(i.qtyToPost, i.openQty)">
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="openSalesOrders.length"></ngb-pagination>
 </div>
 <ng-template #template>
     <div class="modal-header">
@@ -88,8 +98,34 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" (click)="updateList()">Post Transaction</button>
+        <button class="btn btn-primary" [disabled]="postPickListBtnDisable" (click)="updateList()">Post
+            Transaction</button>
         <button class="btn btn-primary" [disabled]="generateFormBtnDisable" (click)="viewReport(plNo)">Generate
             Form</button>
+    </div>
+</ng-template>
+<ng-template #pickandpack>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Pick List Form</h4>
+
+        <button type="button" class="close" aria-label="close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label>Date</label>
+            <input type="text" class="form-control" #dp="bsDatepicker" bsDatepicker [(ngModel)]="dtpPLDate"
+                (ngModelChange)="findPLNo(dtpPLDate)">
+        </div>
+        <div class="form-group">
+            <label for="plNo">Pick List No.</label>
+            <select class="form-control form-control-sm" (change)="selectedPLNo($event.target.value)">
+                <option *ngFor="let o of webPLNo" [value]="o.plNo">{{ o.plNo }}</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" (click)="viewReport()">Generate Form</button>
     </div>
 </ng-template>

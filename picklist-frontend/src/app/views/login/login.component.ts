@@ -46,7 +46,6 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
-    console.log('test');
 
     if (this.loginForm.invalid) {
       return;
@@ -58,7 +57,7 @@ export class LoginComponent implements OnInit {
     credential.userName = this.f.username.value;
     credential.password = this.f.password.value;
     credential.address = '10.0.100.31';
-    credential.dbName = 'TESTDBPICKLIST';
+    credential.dbName = 'ZZ_TESTDB_PICKLIST';
     this.apiService.login(credential)
       .subscribe(
         response => {
@@ -86,11 +85,6 @@ export class LoginComponent implements OnInit {
           this.loading = false;
       }
     );
-    console.log('test submit');
-  }
-
-  testButton() {
-    console.log('test submit');
   }
   
 }
