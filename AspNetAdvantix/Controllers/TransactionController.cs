@@ -106,6 +106,14 @@ namespace AspNetAdvantix.Controllers
                         // rows
                         oStockTransfer.Lines.ItemCode = obj.ItemCode;
                         oStockTransfer.Lines.Quantity = 1;
+                        if (obj.UseBaseUnits == "Y")
+                        {
+                            oStockTransfer.Lines.UseBaseUnits = SAPbobsCOM.BoYesNoEnum.tYES;
+                        }
+                        else
+                        {
+                            oStockTransfer.Lines.UseBaseUnits = SAPbobsCOM.BoYesNoEnum.tNO;
+                        }
                         oStockTransfer.Lines.Add();
 
                         int RetCode = oStockTransfer.Add();

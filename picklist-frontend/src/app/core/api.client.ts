@@ -1191,6 +1191,7 @@ export interface IODLNViewModel {
 export class OpenSalesOrder implements IOpenSalesOrder {
     type?: string | undefined;
     docNum?: number;
+    poNo?: string | undefined;
     docDate?: Date;
     soType?: string | undefined;
     cardCode?: string | undefined;
@@ -1208,6 +1209,7 @@ export class OpenSalesOrder implements IOpenSalesOrder {
     docEntry?: number;
     lineNum?: number;
     objType?: string | undefined;
+    useBaseUnits?: string | undefined;
 
     constructor(data?: IOpenSalesOrder) {
         if (data) {
@@ -1222,6 +1224,7 @@ export class OpenSalesOrder implements IOpenSalesOrder {
         if (data) {
             this.type = data["type"];
             this.docNum = data["docNum"];
+            this.poNo = data["poNo"];
             this.docDate = data["docDate"] ? new Date(data["docDate"].toString()) : <any>undefined;
             this.soType = data["soType"];
             this.cardCode = data["cardCode"];
@@ -1239,6 +1242,7 @@ export class OpenSalesOrder implements IOpenSalesOrder {
             this.docEntry = data["docEntry"];
             this.lineNum = data["lineNum"];
             this.objType = data["objType"];
+            this.useBaseUnits = data["useBaseUnits"];
         }
     }
 
@@ -1253,6 +1257,7 @@ export class OpenSalesOrder implements IOpenSalesOrder {
         data = typeof data === 'object' ? data : {};
         data["type"] = this.type;
         data["docNum"] = this.docNum;
+        data["poNo"] = this.poNo;
         data["docDate"] = this.docDate ? this.docDate.toISOString() : <any>undefined;
         data["soType"] = this.soType;
         data["cardCode"] = this.cardCode;
@@ -1270,6 +1275,7 @@ export class OpenSalesOrder implements IOpenSalesOrder {
         data["docEntry"] = this.docEntry;
         data["lineNum"] = this.lineNum;
         data["objType"] = this.objType;
+        data["useBaseUnits"] = this.useBaseUnits;
         return data; 
     }
 }
@@ -1277,6 +1283,7 @@ export class OpenSalesOrder implements IOpenSalesOrder {
 export interface IOpenSalesOrder {
     type?: string | undefined;
     docNum?: number;
+    poNo?: string | undefined;
     docDate?: Date;
     soType?: string | undefined;
     cardCode?: string | undefined;
@@ -1294,6 +1301,7 @@ export interface IOpenSalesOrder {
     docEntry?: number;
     lineNum?: number;
     objType?: string | undefined;
+    useBaseUnits?: string | undefined;
 }
 
 export class PickedSalesOrder implements IPickedSalesOrder {
@@ -1307,7 +1315,7 @@ export class PickedSalesOrder implements IPickedSalesOrder {
     itemCode?: string | undefined;
     pickedQty?: number;
     qtyToPost?: number;
-    plNo?: number;
+    plNo?: number | undefined;
     plDate?: Date | undefined;
     plRemarks?: string | undefined;
     plUser?: string | undefined;
@@ -1317,6 +1325,7 @@ export class PickedSalesOrder implements IPickedSalesOrder {
     docEntry?: number;
     lineNum?: number;
     objType?: string | undefined;
+    useBaseUnits?: string | undefined;
 
     constructor(data?: IPickedSalesOrder) {
         if (data) {
@@ -1349,6 +1358,7 @@ export class PickedSalesOrder implements IPickedSalesOrder {
             this.docEntry = data["docEntry"];
             this.lineNum = data["lineNum"];
             this.objType = data["objType"];
+            this.useBaseUnits = data["useBaseUnits"];
         }
     }
 
@@ -1381,6 +1391,7 @@ export class PickedSalesOrder implements IPickedSalesOrder {
         data["docEntry"] = this.docEntry;
         data["lineNum"] = this.lineNum;
         data["objType"] = this.objType;
+        data["useBaseUnits"] = this.useBaseUnits;
         return data; 
     }
 }
@@ -1396,7 +1407,7 @@ export interface IPickedSalesOrder {
     itemCode?: string | undefined;
     pickedQty?: number;
     qtyToPost?: number;
-    plNo?: number;
+    plNo?: number | undefined;
     plDate?: Date | undefined;
     plRemarks?: string | undefined;
     plUser?: string | undefined;
@@ -1406,6 +1417,7 @@ export interface IPickedSalesOrder {
     docEntry?: number;
     lineNum?: number;
     objType?: string | undefined;
+    useBaseUnits?: string | undefined;
 }
 
 export class PickListNo implements IPickListNo {
@@ -1613,6 +1625,7 @@ export class UpdateSalesOrder implements IUpdateSalesOrder {
     plNo?: number;
     remarks?: string | undefined;
     date?: Date;
+    userName?: string | undefined;
     objType?: string | undefined;
 
     constructor(data?: IUpdateSalesOrder) {
@@ -1634,6 +1647,7 @@ export class UpdateSalesOrder implements IUpdateSalesOrder {
             this.plNo = data["plNo"];
             this.remarks = data["remarks"];
             this.date = data["date"] ? new Date(data["date"].toString()) : <any>undefined;
+            this.userName = data["userName"];
             this.objType = data["objType"];
         }
     }
@@ -1655,6 +1669,7 @@ export class UpdateSalesOrder implements IUpdateSalesOrder {
         data["plNo"] = this.plNo;
         data["remarks"] = this.remarks;
         data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        data["userName"] = this.userName;
         data["objType"] = this.objType;
         return data; 
     }
@@ -1669,6 +1684,7 @@ export interface IUpdateSalesOrder {
     plNo?: number;
     remarks?: string | undefined;
     date?: Date;
+    userName?: string | undefined;
     objType?: string | undefined;
 }
 

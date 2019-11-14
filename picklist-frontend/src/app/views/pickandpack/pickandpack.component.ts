@@ -71,6 +71,7 @@ export class PickAndPackComponent implements OnInit {
       updateSO.pickedQty = o.qtyToPost;
       updateSO.itemCode = o.itemCode;
       updateSO.remarks = this.remarks;
+      updateSO.userName = this.authService.getUserName();
       updateSO.plNo = this.plNo;
       updateSO.objType = o.objType;
       listupdateSo.push(updateSO);

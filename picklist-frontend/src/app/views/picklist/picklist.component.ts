@@ -43,7 +43,7 @@ export class PicklistComponent implements OnInit {
   getUpdatedSO() {
     this.apiService.getUpdatedSalesOrder().subscribe(response => {
       this.pickList = response;
-      console.table(response);
+      console.log(response);
     })
   }
 
@@ -54,7 +54,7 @@ export class PicklistComponent implements OnInit {
     } else {
       this.checkedPL.push(list);
     }
-    console.table(this.checkedPL);
+    console.log(this.checkedPL);
   }
 
   postTransaction() {
@@ -74,6 +74,7 @@ export class PicklistComponent implements OnInit {
       openSO.docEntry = o.docEntry;
       openSO.lineNum = o.lineNum;
       openSO.objType = o.objType;
+      openSO.useBaseUnits = o.useBaseUnits;
       openSalesOrderList.push(openSO);
       console.log(openSO);
     });

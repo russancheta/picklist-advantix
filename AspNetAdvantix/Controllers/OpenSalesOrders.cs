@@ -36,6 +36,7 @@ namespace AspNetAdvantix.Controllers
                 (select
 					'SO' 'Type',
                     a.DocNum,
+                    isnull(a.U_AR_PONo, '-') 'PONo',
                     a.DocDate,
                     case
                         when a.U_SO_TYPE = 'C'
@@ -62,7 +63,8 @@ namespace AspNetAdvantix.Controllers
                     end 'Branch',
                     b.DocEntry,
                     b.LineNum,
-                    b.ObjType
+                    b.ObjType,
+                    'Y' 'UseBaseUnits'
                 from
                     ORDR a
                     inner join RDR1 b on a.DocEntry = b.DocEntry
@@ -78,6 +80,7 @@ namespace AspNetAdvantix.Controllers
                 select
 					'ITR' 'Type',
                     a.DocNum,
+                    isnull(a.U_AR_PONo, '-') 'PONo',
                     a.DocDate,
                     'Consignment' 'SOType',
                     a.CardCode,
@@ -99,7 +102,8 @@ namespace AspNetAdvantix.Controllers
                     end 'Branch',
                     b.DocEntry,
                     b.LineNum,
-                    b.ObjType
+                    b.ObjType,
+                    'Y' 'UseBaseUnits'
                 from
                     OWTQ a
                     inner join WTQ1 b on a.DocEntry = b.DocEntry
@@ -148,7 +152,8 @@ namespace AspNetAdvantix.Controllers
                     b.WhsCode,
                     b.DocEntry,
                     b.LineNum,
-                    b.ObjType
+                    b.ObjType,
+                    'Y' 'UseBaseUnits'
                 from
                     ORDR a
                     inner join RDR1 b on a.DocEntry = b.DocEntry
@@ -179,7 +184,8 @@ namespace AspNetAdvantix.Controllers
                     b.WhsCode,
                     b.DocEntry,
                     b.LineNum,
-                    b.ObjType
+                    b.ObjType,
+                    'Y' 'UseBaseUnits'
                 from
                     OWTQ a
                     inner join WTQ1 b on a.DocEntry = b.DocEntry
@@ -299,7 +305,8 @@ namespace AspNetAdvantix.Controllers
                                 a 
                             set 
                                 a.U_SO_PickedQty = {2}, 
-                                a.U_SO_PLRemarks = {3}, 
+                                a.U_SO_PLRemarks = {3},
+                                a.U_SO_PLUser = {5}, 
                                 a.U_SO_PLNo = {4}, 
                                 a.U_SO_PLDate = getdate(), 
                                 a.U_SO_Released = 'Y' 
@@ -315,7 +322,8 @@ namespace AspNetAdvantix.Controllers
                                 a 
                             set 
                                 a.U_SO_PickedQty = {2}, 
-                                a.U_SO_PLRemarks = {3}, 
+                                a.U_SO_PLRemarks = {3},
+                                a.U_SO_PLUser = {5}, 
                                 a.U_SO_PLNo = {4}, 
                                 a.U_SO_PLDate = getdate(), 
                                 a.U_SO_Released = 'Y' 
@@ -327,7 +335,7 @@ namespace AspNetAdvantix.Controllers
                         break;
                 }
                 Console.WriteLine(updateQuery);
-                var update = _context.Database.ExecuteSqlCommand(updateQuery, obj.DocEntry, obj.LineNum, obj.PickedQty, obj.Remarks, obj.PLNo);
+                var update = _context.Database.ExecuteSqlCommand(updateQuery, obj.DocEntry, obj.LineNum, obj.PickedQty, obj.Remarks, obj.PLNo, obj.UserName);
                 pickNo = obj.PLNo;
                 updateRows += update;
                 var docEntry = _pickListDbContext.PickListH.Last();

@@ -6,6 +6,7 @@ namespace AspNetAdvantix.Model
     {
         public string Type { get; set; }
         public int DocNum { get; set; }
+        public string PONo { get; set; }
         public DateTime DocDate { get; set; }
         public string SOType { get; set; }
         public string CardCode { get; set; }
@@ -23,5 +24,6 @@ namespace AspNetAdvantix.Model
         public int DocEntry { get; set; }
         public int LineNum { get; set; }
         public string ObjType { get; set; }
+        public string UseBaseUnits { get; set; }
     }
 }

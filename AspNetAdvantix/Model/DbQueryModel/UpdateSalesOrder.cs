@@ -12,7 +12,7 @@ namespace AspNetAdvantix.Model
         public int PLNo { get; set; }
         public string Remarks { get; set; }
         public DateTime Date { get; set; }
-
+        public string UserName { get; set; }
         public string ObjType { get; set; }
     }
 }

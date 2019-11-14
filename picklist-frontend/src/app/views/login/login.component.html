@@ -1,44 +1,43 @@
-<div class="app-body">
-  <main class="main d-flex align-items-center">
-    <div class="container">
-      <div class="row" style="padding-left: 1rem; padding-right: 1rem;">
-        <div class="ibox-content" style="padding-bottom: 1rem;">
-          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-            <div class="text-center">
-              <img src="assets/img/RPO.png" class="ml-auto mt-3 mb-3" width="25%" />
+<div class="container" style="width: 450px; margin-top: 150px;">
+  <div class="card">
+    <div class="card-body">
+      <div>
+        <img src="assets/img/RPO.png" class="img-fluid" alt="Responsive image" />
+      </div>
+      <div class="box-login">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+          <div *ngIf="error" class="alert alert-danger"> {{ error }} </div>
+          <p class="text-muted">Sign in to your account</p>
+          <div class="input-group mb-1">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="icon-user"></i></span>
             </div>
-            <div *ngIf="error" class="alert alert-danger"> {{ error }} </div>
-            <p class="text-muted">Sign in to your account</p>
-            <div class="input-group mb-1">
-              <div class="input-group-prepend">
-                <span class="input-group-text"><i class="icon-user"></i></span>
-              </div>
-              <input type="text" formControlName="username" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f.username.errors }" placeholder="Username">
-              <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
-                <div *ngIf="f.username.errors.required">Username is required</div>
-              </div>
+            <input type="text" formControlName="username" class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f.username.errors }" placeholder="Username">
+            <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+              <div *ngIf="f.username.errors.required">Username is required</div>
             </div>
-            <div class="input-group mb-1">
-              <div class="input-group-prepend">
-                <span class="input-group-text"><i class="icon-lock"></i></span>
-              </div>
-              <input #inputPass type="password" formControlName="password" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f.password.errors }" placeholder="Password" />
-              <div class="input-group-append">
-                <button class="btn btn-outline-primary" type="button" (click)="showPassword(inputPass)">
-                  <i [ngClass]="inputPass.type == 'password' ? 'fa fa-eye' : 'fa fa-eye-slash'"></i></button>
-              </div>
-              <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-                <div *ngIf="f.password.errors.required">Password is required</div>
-              </div>
+          </div>
+          <div class="input-group mb-1">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="icon-lock"></i></span>
             </div>
-            <button [disabled]="loading" type="submit" class="btn btn-primary btn-block"
-                style="margin-top: 2rem;">Login <img *ngIf="loading"
-                src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></button>
-          </form>
-        </div>
+            <input #inputPass type="password" formControlName="password" class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f.password.errors }" placeholder="Password" />
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary" type="button" (click)="showPassword(inputPass)">
+                <i [ngClass]="inputPass.type == 'password' ? 'fa fa-eye' : 'fa fa-eye-slash'"></i></button>
+            </div>
+            <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+              <div *ngIf="f.password.errors.required">Password is required</div>
+            </div>
+          </div>
+          <button [disabled]="loading" type="submit" class="btn btn-primary btn-block" style="margin-top: 2rem;">Login
+            <img *ngIf="loading"
+              src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></button>
+        </form>
       </div>
     </div>
-  </main>
+  </div>
 </div>
