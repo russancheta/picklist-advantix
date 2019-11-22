@@ -2,12 +2,13 @@
   <div class="card">
     <div class="card-body">
       <div>
-        <img src="assets/img/RPO.png" class="img-fluid" alt="Responsive image" />
+        <img src="assets/xenon-logo2.png" class="img-fluid centerImage" alt="Responsive image"/>
       </div>
       <div class="box-login">
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
           <div *ngIf="error" class="alert alert-danger"> {{ error }} </div>
+          <br>
           <p class="text-muted">Sign in to your account</p>
           <div class="input-group mb-1">
             <div class="input-group-prepend">

@@ -25,6 +25,8 @@ export class PicklistComponent implements OnInit {
 
   selectedPL: number = 0;
 
+  postTransactionBtn = false;
+
   // pagination
   page = 1;
   pageSize = 20;
@@ -41,9 +43,11 @@ export class PicklistComponent implements OnInit {
   }
 
   getUpdatedSO() {
+    this.showLoading();
     this.apiService.getUpdatedSalesOrder().subscribe(response => {
       this.pickList = response;
-      console.log(response);
+      Swal.close();
+      console.table(response);
     })
   }
 
@@ -54,7 +58,7 @@ export class PicklistComponent implements OnInit {
     } else {
       this.checkedPL.push(list);
     }
-    console.log(this.checkedPL);
+    console.table(this.checkedPL);
   }
 
   postTransaction() {
@@ -75,8 +79,12 @@ export class PicklistComponent implements OnInit {
       openSO.lineNum = o.lineNum;
       openSO.objType = o.objType;
       openSO.useBaseUnits = o.useBaseUnits;
+      openSO.docDate = o.docDate;
+      openSO.soType = o.soType;
+      openSO.poNo = o.poNo;
+      openSO.delStat = o.delStatus;
       openSalesOrderList.push(openSO);
-      console.log(openSO);
+      console.table(openSO);
     });
     this.apiService.postTransaction(this.authService.getToken(), openSalesOrderList).subscribe(
       res => {
@@ -102,7 +110,6 @@ export class PicklistComponent implements OnInit {
           type: 'error',
           text: 'Oops. Something went wrong.'
         });
-        Swal.close();
       })
     console.log(openSalesOrderList);
   }
@@ -126,15 +133,17 @@ export class PicklistComponent implements OnInit {
     }).then((result) => {
       if (result.value) {
         this.postTransaction();
+        this.postTransactionBtn = true;
       }
     })
-    this.getUpdatedSO();
+    // this.getUpdatedSO();
   }
 
   showLoading() {
     Swal.fire({
       title: 'Loading',
       text: 'Please wait',
+      imageUrl: 'data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==',
       showConfirmButton: false,
       allowOutsideClick: false
     })
@@ -149,7 +158,7 @@ export class PicklistComponent implements OnInit {
   }
 
   openModal(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template);
+    this.modalRef = this.modalService.show(template, {ignoreBackdropClick: true, keyboard: false, class: 'modal-xl'});
   }
 
   closeModal() {

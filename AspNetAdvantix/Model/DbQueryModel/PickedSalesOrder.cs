@@ -6,6 +6,10 @@ namespace AspNetAdvantix.Model
     {
         public string Type { get; set; }
         public int DocNum { get; set; }
+        public DateTime DocDate { get; set; }
+        public string Branch { get; set; }
+        public string DelStatus { get; set; }
+        public string PONo { get; set; }
         public string CardCode { get; set; }
         public string CardName { get; set; }
         public string BPName { get; set; }

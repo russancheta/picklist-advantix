@@ -1,9 +1,9 @@
-C:\advantix\picklist-advantix\AspNetAdvantix\bin\Debug\netcoreapp2.2\AspNetAdvantix.dll
-C:\advantix\picklist-advantix\AspNetAdvantix\bin\Debug\netcoreapp2.2\AspNetAdvantix.pdb
-C:\advantix\picklist-advantix\AspNetAdvantix\bin\Debug\netcoreapp2.2\Interop.SAPbobsCOM.dll
 C:\advantix\picklist-advantix\AspNetAdvantix\bin\Debug\netcoreapp2.2\AspNetAdvantix.deps.json
 C:\advantix\picklist-advantix\AspNetAdvantix\bin\Debug\netcoreapp2.2\AspNetAdvantix.runtimeconfig.json
 C:\advantix\picklist-advantix\AspNetAdvantix\bin\Debug\netcoreapp2.2\AspNetAdvantix.runtimeconfig.dev.json
+C:\advantix\picklist-advantix\AspNetAdvantix\bin\Debug\netcoreapp2.2\AspNetAdvantix.dll
+C:\advantix\picklist-advantix\AspNetAdvantix\bin\Debug\netcoreapp2.2\AspNetAdvantix.pdb
+C:\advantix\picklist-advantix\AspNetAdvantix\bin\Debug\netcoreapp2.2\Interop.SAPbobsCOM.dll
 C:\advantix\picklist-advantix\AspNetAdvantix\obj\Debug\netcoreapp2.2\AspNetAdvantix.csprojAssemblyReference.cache
 C:\advantix\picklist-advantix\AspNetAdvantix\obj\Debug\netcoreapp2.2\AspNetAdvantix.csproj.CoreCompileInputs.cache
 C:\advantix\picklist-advantix\AspNetAdvantix\obj\Debug\netcoreapp2.2\AspNetAdvantix.RazorAssemblyInfo.cache

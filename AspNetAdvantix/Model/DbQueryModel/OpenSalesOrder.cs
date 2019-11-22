@@ -9,6 +9,7 @@ namespace AspNetAdvantix.Model
         public string PONo { get; set; }
         public DateTime DocDate { get; set; }
         public string SOType { get; set; }
+        public string DelStat { get; set; }
         public string CardCode { get; set; }
         public string CardName { get; set; }
         public string BPName { get; set; }

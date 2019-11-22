@@ -1194,6 +1194,7 @@ export class OpenSalesOrder implements IOpenSalesOrder {
     poNo?: string | undefined;
     docDate?: Date;
     soType?: string | undefined;
+    delStat?: string | undefined;
     cardCode?: string | undefined;
     cardName?: string | undefined;
     bpName?: string | undefined;
@@ -1227,6 +1228,7 @@ export class OpenSalesOrder implements IOpenSalesOrder {
             this.poNo = data["poNo"];
             this.docDate = data["docDate"] ? new Date(data["docDate"].toString()) : <any>undefined;
             this.soType = data["soType"];
+            this.delStat = data["delStat"];
             this.cardCode = data["cardCode"];
             this.cardName = data["cardName"];
             this.bpName = data["bpName"];
@@ -1260,6 +1262,7 @@ export class OpenSalesOrder implements IOpenSalesOrder {
         data["poNo"] = this.poNo;
         data["docDate"] = this.docDate ? this.docDate.toISOString() : <any>undefined;
         data["soType"] = this.soType;
+        data["delStat"] = this.delStat;
         data["cardCode"] = this.cardCode;
         data["cardName"] = this.cardName;
         data["bpName"] = this.bpName;
@@ -1286,6 +1289,7 @@ export interface IOpenSalesOrder {
     poNo?: string | undefined;
     docDate?: Date;
     soType?: string | undefined;
+    delStat?: string | undefined;
     cardCode?: string | undefined;
     cardName?: string | undefined;
     bpName?: string | undefined;
@@ -1307,6 +1311,10 @@ export interface IOpenSalesOrder {
 export class PickedSalesOrder implements IPickedSalesOrder {
     type?: string | undefined;
     docNum?: number;
+    docDate?: Date;
+    branch?: string | undefined;
+    delStatus?: string | undefined;
+    poNo?: string | undefined;
     cardCode?: string | undefined;
     cardName?: string | undefined;
     bpName?: string | undefined;
@@ -1340,6 +1348,10 @@ export class PickedSalesOrder implements IPickedSalesOrder {
         if (data) {
             this.type = data["type"];
             this.docNum = data["docNum"];
+            this.docDate = data["docDate"] ? new Date(data["docDate"].toString()) : <any>undefined;
+            this.branch = data["branch"];
+            this.delStatus = data["delStatus"];
+            this.poNo = data["poNo"];
             this.cardCode = data["cardCode"];
             this.cardName = data["cardName"];
             this.bpName = data["bpName"];
@@ -1373,6 +1385,10 @@ export class PickedSalesOrder implements IPickedSalesOrder {
         data = typeof data === 'object' ? data : {};
         data["type"] = this.type;
         data["docNum"] = this.docNum;
+        data["docDate"] = this.docDate ? this.docDate.toISOString() : <any>undefined;
+        data["branch"] = this.branch;
+        data["delStatus"] = this.delStatus;
+        data["poNo"] = this.poNo;
         data["cardCode"] = this.cardCode;
         data["cardName"] = this.cardName;
         data["bpName"] = this.bpName;
@@ -1399,6 +1415,10 @@ export class PickedSalesOrder implements IPickedSalesOrder {
 export interface IPickedSalesOrder {
     type?: string | undefined;
     docNum?: number;
+    docDate?: Date;
+    branch?: string | undefined;
+    delStatus?: string | undefined;
+    poNo?: string | undefined;
     cardCode?: string | undefined;
     cardName?: string | undefined;
     bpName?: string | undefined;

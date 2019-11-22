@@ -44,6 +44,7 @@ namespace AspNetAdvantix.Controllers
                         when a.U_SO_TYPE = 'O'
                         then 'Outright'
                     end 'SOType',
+                    a.U_DelStat 'DelStat',
                     a.CardCode,
                     a.CardName,
                     (select z.Block from CRD1 z where z.CardCode = a.CardCode and z.Address = a.U_ITR_BRANCH) 'BPName',
@@ -83,6 +84,7 @@ namespace AspNetAdvantix.Controllers
                     isnull(a.U_AR_PONo, '-') 'PONo',
                     a.DocDate,
                     'Consignment' 'SOType',
+                    a.U_DelStat 'DelStat',
                     a.CardCode,
                     a.CardName,
                     (select z.Block from CRD1 z where z.CardCode = a.CardCode and z.Address = a.U_ITR_BRANCH) 'BPName',
@@ -130,6 +132,10 @@ namespace AspNetAdvantix.Controllers
                 (select
 					'SO' 'Type',
                     a.DocNum,
+					a.DocDate,
+					a.U_ITR_BRANCH 'Branch',
+					a.U_DelStat 'DelStatus',
+					a.U_AR_PONO 'PONo',
                     a.CardCode,
                     a.CardName,
                     (select z.Block from CRD1 z where z.CardCode = a.CardCode and z.Address = a.U_ITR_BRANCH) 'BPName',
@@ -167,6 +173,10 @@ namespace AspNetAdvantix.Controllers
                 select
 					'ITR' 'Type',
                     a.DocNum,
+					a.DocDate,
+					a.U_ITR_BRANCH 'Branch',
+					a.U_DelStat 'DelStatus',
+					a.U_AR_PONO 'PONo',
                     a.CardCode,
                     a.CardName,
                     (select z.Block from CRD1 z where z.CardCode = a.CardCode and z.Address = a.U_ITR_BRANCH) 'BPName',

@@ -1,11 +1,13 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { UpdateSalesOrder, Service, OpenSalesOrder, WebPLNo } from '../../core/api.client';
-import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService, ModalOptions, getMonth, getDay } from 'ngx-bootstrap';
 import { AuthService } from '../../shared/auth.service';
 import { environment } from '../../../environments/environment';
 import { ReportService } from '../../shared/report.service';
+import { interval } from 'rxjs/internal/observable/interval';
 import Swal from 'sweetalert2';
 import { NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
+import { flatMap, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-pickandpack',
@@ -36,6 +38,10 @@ export class PickAndPackComponent implements OnInit {
   generateFormBtnDisable = true;
   postPickListBtnDisable = false;
 
+  datemonthNo = 0;
+
+  refreshInterval: any;
+
   // pagination
   page = 1;
   pageSize = 20;
@@ -50,6 +56,7 @@ export class PickAndPackComponent implements OnInit {
   ngOnInit() {
     this.getOpenSalesOrders();
     this.getAllPickList(this.dtpPLDate);
+    this.getDateMonthNo();
   }
 
   validationCheck(a: number, b: number, c: number) {
@@ -87,7 +94,7 @@ export class PickAndPackComponent implements OnInit {
           type: 'success',
           title: 'Transaction successfuly posted.',
           showConfirmButton: false,
-          timer: 2500
+          timer: 3500
         })
         console.log(res.message);
         console.log(res.result);
@@ -97,7 +104,7 @@ export class PickAndPackComponent implements OnInit {
         Swal.fire({
           type: 'error',
           title: 'Transaction was not posted.',
-          timer: 2500
+          timer: 3500
         })
         console.log(res.message);
         console.log(res.result);
@@ -116,10 +123,23 @@ export class PickAndPackComponent implements OnInit {
   }
 
   getOpenSalesOrders() {
+    this.showLoading();
     this.apiService.getOpenSalesOrder().subscribe(response => {
       this.openSalesOrders = response;
-      console.table(response);
-    });
+      Swal.close();
+      /*this.refreshInterval = interval(6000).pipe(
+        startWith(0),
+        flatMap(() => this.apiService.getOpenSalesOrder())).subscribe(response => {
+          this.openSalesOrders = response;
+          Swal.close();
+        },
+          error => {
+            Swal.close();
+            console.log('HTTP error', error);
+          }
+        );*/
+      }
+    );
   }
 
   viewReport() {
@@ -164,6 +184,14 @@ export class PickAndPackComponent implements OnInit {
     console.log(plNo);
   }
 
+  getDateMonthNo() {
+    let dayNo = this.dtpPLDate.getDate();
+    console.log(dayNo);
+    let monthNo = getMonth(this.dtpPLDate) + 1;
+    console.log(monthNo);
+    console.log(this.dtpPLDate);
+  }
+
   closeModal() {
     this.modalRef.hide();
     this.checkedSO = [];
@@ -174,6 +202,7 @@ export class PickAndPackComponent implements OnInit {
     Swal.fire({
       title: 'Loading',
       text: 'Please wait',
+      imageUrl: 'data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==',
       showConfirmButton: false,
       allowOutsideClick: false
     });

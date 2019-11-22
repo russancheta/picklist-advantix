@@ -79,7 +79,6 @@
                         <th>Doc No.</th>
                         <th>Doc. Date</th>
                         <th>BP Name</th>
-                        <th>Item Code</th>
                         <th>Description</th>
                         <th>Picked Qty</th>
                     </tr>
@@ -88,9 +87,8 @@
                     <tr *ngFor="let o of checkedSO; let i = index">
                         <th> {{ i + 1 }} </th>
                         <td> {{ o.docNum }} </td>
-                        <td> {{ o.docDate | date: 'yyyy-MM-dd' }} </td>
+                        <td> {{ o.docDate | date: 'yy-MM-dd' }} </td>
                         <td> {{ o.bpName }} </td>
-                        <td> {{ o.itemCode }} </td>
                         <td> {{ o.dscription }} </td>
                         <td> {{ o.qtyToPost }} </td>
                     </tr>

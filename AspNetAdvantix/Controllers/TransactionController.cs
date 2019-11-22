@@ -96,11 +96,24 @@ namespace AspNetAdvantix.Controllers
                         StockTransfer oStockTransfer = (SAPbobsCOM.StockTransfer)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oStockTransfer);
 
                         // header
+                        oStockTransfer.DocDate = list[0].DocDate.AddDays(1);
+                        Console.WriteLine(list[0].DocDate);
                         oStockTransfer.CardCode = list[0].CardCode;
                         oStockTransfer.FromWarehouse = "01";
                         oStockTransfer.ToWarehouse = list[0].WhseBranch;
                         oStockTransfer.UserFields.Fields.Item("U_IT_TYPE").Value = "SALES";
                         oStockTransfer.UserFields.Fields.Item("U_AR_SO").Value = list[0].DocNum.ToString();
+                        oStockTransfer.UserFields.Fields.Item("U_AR_PONO").Value = list[0].PONo;
+                        oStockTransfer.UserFields.Fields.Item("U_ITR_BRANCH").Value = list[0].WhseBranch;
+                        if (obj.SOType == "Consignment")
+                        {
+                            oStockTransfer.UserFields.Fields.Item("U_SO_TYPE").Value = "C";
+                        }
+                        else
+                        {
+                            oStockTransfer.UserFields.Fields.Item("U_SO_TYPE").Value = "O";
+                        }
+                        oStockTransfer.UserFields.Fields.Item("U_DelStat").Value = list[0].DelStat;
                         oStockTransfer.Comments = $"Based on Sales Order {list[0].DocNum}";
 
                         // rows
@@ -143,6 +156,11 @@ namespace AspNetAdvantix.Controllers
                         }
                     }
                 }
+
+                // close Sales Order upon posting of Inventory Transfer
+                Documents oSalesOrder = (SAPbobsCOM.Documents)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oOrders);
+                oSalesOrder.GetByKey(list[0].DocEntry);
+                int iRetCode = oSalesOrder.Close();
             }
             else
             {

@@ -46,16 +46,16 @@ export const navItems: NavData[] = [
   {
     name: 'Pick and Pack',
     url: '/pickandpack',
-    icon: 'icon-drop'
+    icon: 'fa fa-file-o'
   },
   {
     name: 'Pick List',
     url: '/picklist',
-    icon: 'icon-drop'
+    icon: 'fa fa-file-text-o'
   },
   {
     name: 'Open SO',
     url: '/openso',
-    icon: 'icon-drop'
+    icon: 'fa fa-check-square-o'
   }
 ];

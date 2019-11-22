@@ -3,7 +3,7 @@
         <div class="card-body">
             <h4>Pick List</h4>
             <div class="form-group">
-                <button class="btn btn-primary" (click)="transactionConfirm()" [disabled]="checkedPL.length == 0">Post
+                <button class="btn btn-primary" (click)="openModal(template)" [disabled]="checkedPL.length == 0">Post
                     Transactions</button>
             </div>
             <div style="overflow-y: auto; height: 400px; display: block">
@@ -18,7 +18,7 @@
                             <th>Description</th>
                             <th>Picked Qty</th>
                             <th>In Stock</th>
-                            <th>Qty To Post</th>
+                            <th width="10%">Qty To Post</th>
                             <th>Inv. UoM</th>
                             <th>Pick</th>
                         </tr>
@@ -57,6 +57,47 @@
         </div>
     </div>
 </div>
+<ng-template #template>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Transactions to Post</h4>
+        <button type="button" class="close" aria-label="close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div style="overflow-y: auto; height: 250px;">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th width="2%">#</th>
+                        <th>Pick List No.</th>
+                        <th>Doc No.</th>
+                        <th>Doc. Date</th>
+                        <th>BP Name</th>
+                        <th>Description</th>
+                        <th>Qty To Post</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let o of checkedPL; let i = index">
+                        <th> {{ i + 1 }} </th>
+                        <td> {{ o.plNo }} </td>
+                        <td> {{ o.docNum }} </td>
+                        <td> {{ o.docDate | date: 'yy-MM-dd' }} </td>
+                        <td> {{ o.bpName }} </td>
+                        <td> {{ o.dscription }} </td>
+                        <td> {{ o.qtyToPost }} </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" [disabled]="postTransactionBtn" (click)="transactionConfirm()">Post
+            Transaction</button>
+    </div>
+</ng-template>
 <!--
 <ng-template #template>
     <div class="modal-header">
