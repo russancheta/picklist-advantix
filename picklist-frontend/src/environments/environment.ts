@@ -5,6 +5,6 @@
 
 export const environment = {
   production: false,
-  API_BASE_URL: 'http://10.0.100.162:5000',
+  API_BASE_URL: 'http://10.0.100.170:5000',
   REPORT_BASE_URL: 'http://localhost:55768'
 };

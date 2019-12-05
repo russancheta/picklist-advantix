@@ -1,16 +1,17 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { Service, PickedSalesOrder, OpenSalesOrder, WebPLNo } from '../../core/api.client';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService, getDay } from 'ngx-bootstrap';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../shared/auth.service';
 import { environment } from '../../../environments/environment';
 import { ReportService } from '../../shared/report.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-picklist',
   templateUrl: './picklist.component.html',
   styleUrls: ['./picklist.component.scss'],
-  providers: [ReportService]
+  providers: [ReportService, DatePipe]
 })
 export class PicklistComponent implements OnInit {
 
@@ -35,7 +36,8 @@ export class PicklistComponent implements OnInit {
     private apiService: Service,
     private modalService: BsModalService,
     private authService: AuthService,
-    private reportService: ReportService
+    private reportService: ReportService,
+    private datePipe: DatePipe
   ) { }
 
   ngOnInit() {
@@ -58,12 +60,12 @@ export class PicklistComponent implements OnInit {
     } else {
       this.checkedPL.push(list);
     }
-    console.table(this.checkedPL);
   }
 
   postTransaction() {
     this.showLoading();
     const openSalesOrderList: OpenSalesOrder[] = [];
+
     this.checkedPL.forEach(o => {
       const openSO = new OpenSalesOrder();
       openSO.docEntry = o.docEntry;
@@ -79,12 +81,13 @@ export class PicklistComponent implements OnInit {
       openSO.lineNum = o.lineNum;
       openSO.objType = o.objType;
       openSO.useBaseUnits = o.useBaseUnits;
-      openSO.docDate = o.docDate;
+      openSO.docDate = new Date(this.datePipe.transform(o.docDate, 'yyyy-MM-dd'));
       openSO.soType = o.soType;
       openSO.poNo = o.poNo;
       openSO.delStat = o.delStatus;
+      openSO.cancelDate = new Date(this.datePipe.transform(o.cancelDate, 'yyyy-MM-dd'));
+      openSO.shipTo = o.shipTo;
       openSalesOrderList.push(openSO);
-      console.table(openSO);
     });
     this.apiService.postTransaction(this.authService.getToken(), openSalesOrderList).subscribe(
       res => {
@@ -94,24 +97,19 @@ export class PicklistComponent implements OnInit {
             type: 'success',
             text: 'Transaction successfully posted.'
           });
-          console.log(res.result);
-          console.log(res.message);
         } else {
           Swal.fire({
             type: 'error',
             title: 'Transaction was not posted.',
             text: res.message
           })
-          console.log(res.result);
-          console.log(res.message);
         }
       }, error => {
         Swal.fire({
           type: 'error',
           text: 'Oops. Something went wrong.'
         });
-      })
-    console.log(openSalesOrderList);
+      });
   }
 
   validationCheck(a: number, b: number, c: number) {
@@ -158,7 +156,7 @@ export class PicklistComponent implements OnInit {
   }
 
   openModal(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template, {ignoreBackdropClick: true, keyboard: false, class: 'modal-xl'});
+    this.modalRef = this.modalService.show(template, { ignoreBackdropClick: true, keyboard: false, class: 'modal-xl' });
   }
 
   closeModal() {
@@ -175,7 +173,6 @@ export class PicklistComponent implements OnInit {
 
   findPLNo() {
     this.getAllPickList(this.dtpPLDate);
-    console.log(this.webPLNo);
   }
 
   selectedPLNo(plNo: any) {

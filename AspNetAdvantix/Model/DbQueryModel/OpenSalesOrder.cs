@@ -26,5 +26,7 @@ namespace AspNetAdvantix.Model
         public int LineNum { get; set; }
         public string ObjType { get; set; }
         public string UseBaseUnits { get; set; }
+        public DateTime? CancelDate { get; set; }
+        public string ShipTo { get; set; }
     }
 }

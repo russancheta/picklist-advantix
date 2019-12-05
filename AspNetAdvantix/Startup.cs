@@ -39,24 +39,27 @@ namespace AspNetAdvantix
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AdvantixContext>(options => 
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("SQLConnection")));
-
-            services.AddDbContext<PickListDbContext>(options => 
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("SQLConnection")));
-
-            services.AddCors(options => {
-                options.AddPolicy(MyAllowSpecificOrigins, builder => {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins, builder =>
+                {
                     builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
                 });
             });
 
+            services.AddDbContext<AdvantixContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("SQLConnection")));
+
+            services.AddDbContext<PickListDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("SQLConnection")));
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1"});
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
             });
 
             var tokenProvider = new RsaJwtTokenProvider("issuer", "audience", "mykeyname");
@@ -103,7 +106,8 @@ namespace AspNetAdvantix
 
             app.UseSwagger();
 
-            app.UseSwaggerUI(c => {
+            app.UseSwaggerUI(c =>
+            {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
         }

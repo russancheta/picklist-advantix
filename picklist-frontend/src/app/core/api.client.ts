@@ -1211,6 +1211,8 @@ export class OpenSalesOrder implements IOpenSalesOrder {
     lineNum?: number;
     objType?: string | undefined;
     useBaseUnits?: string | undefined;
+    cancelDate?: Date | undefined;
+    shipTo?: string | undefined;
 
     constructor(data?: IOpenSalesOrder) {
         if (data) {
@@ -1245,6 +1247,8 @@ export class OpenSalesOrder implements IOpenSalesOrder {
             this.lineNum = data["lineNum"];
             this.objType = data["objType"];
             this.useBaseUnits = data["useBaseUnits"];
+            this.cancelDate = data["cancelDate"] ? new Date(data["cancelDate"].toString()) : <any>undefined;
+            this.shipTo = data["shipTo"];
         }
     }
 
@@ -1279,6 +1283,8 @@ export class OpenSalesOrder implements IOpenSalesOrder {
         data["lineNum"] = this.lineNum;
         data["objType"] = this.objType;
         data["useBaseUnits"] = this.useBaseUnits;
+        data["cancelDate"] = this.cancelDate ? this.cancelDate.toISOString() : <any>undefined;
+        data["shipTo"] = this.shipTo;
         return data; 
     }
 }
@@ -1306,6 +1312,8 @@ export interface IOpenSalesOrder {
     lineNum?: number;
     objType?: string | undefined;
     useBaseUnits?: string | undefined;
+    cancelDate?: Date | undefined;
+    shipTo?: string | undefined;
 }
 
 export class PickedSalesOrder implements IPickedSalesOrder {
@@ -1334,6 +1342,8 @@ export class PickedSalesOrder implements IPickedSalesOrder {
     lineNum?: number;
     objType?: string | undefined;
     useBaseUnits?: string | undefined;
+    cancelDate?: Date | undefined;
+    shipTo?: string | undefined;
 
     constructor(data?: IPickedSalesOrder) {
         if (data) {
@@ -1371,6 +1381,8 @@ export class PickedSalesOrder implements IPickedSalesOrder {
             this.lineNum = data["lineNum"];
             this.objType = data["objType"];
             this.useBaseUnits = data["useBaseUnits"];
+            this.cancelDate = data["cancelDate"] ? new Date(data["cancelDate"].toString()) : <any>undefined;
+            this.shipTo = data["shipTo"];
         }
     }
 
@@ -1408,6 +1420,8 @@ export class PickedSalesOrder implements IPickedSalesOrder {
         data["lineNum"] = this.lineNum;
         data["objType"] = this.objType;
         data["useBaseUnits"] = this.useBaseUnits;
+        data["cancelDate"] = this.cancelDate ? this.cancelDate.toISOString() : <any>undefined;
+        data["shipTo"] = this.shipTo;
         return data; 
     }
 }
@@ -1438,6 +1452,8 @@ export interface IPickedSalesOrder {
     lineNum?: number;
     objType?: string | undefined;
     useBaseUnits?: string | undefined;
+    cancelDate?: Date | undefined;
+    shipTo?: string | undefined;
 }
 
 export class PickListNo implements IPickListNo {

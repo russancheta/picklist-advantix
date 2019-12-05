@@ -96,15 +96,16 @@ namespace AspNetAdvantix.Controllers
                         StockTransfer oStockTransfer = (SAPbobsCOM.StockTransfer)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oStockTransfer);
 
                         // header
-                        oStockTransfer.DocDate = list[0].DocDate.AddDays(1);
-                        Console.WriteLine(list[0].DocDate);
+                        oStockTransfer.DocDate = Convert.ToDateTime(list[0].DocDate.ToString("yyyy-MM-dd"));
                         oStockTransfer.CardCode = list[0].CardCode;
+                        oStockTransfer.Address = list[0].ShipTo;
                         oStockTransfer.FromWarehouse = "01";
                         oStockTransfer.ToWarehouse = list[0].WhseBranch;
                         oStockTransfer.UserFields.Fields.Item("U_IT_TYPE").Value = "SALES";
                         oStockTransfer.UserFields.Fields.Item("U_AR_SO").Value = list[0].DocNum.ToString();
-                        oStockTransfer.UserFields.Fields.Item("U_AR_PONO").Value = list[0].PONo;
+                        oStockTransfer.UserFields.Fields.Item("U_AP_PONO").Value = list[0].PONo;
                         oStockTransfer.UserFields.Fields.Item("U_ITR_BRANCH").Value = list[0].WhseBranch;
+                        oStockTransfer.UserFields.Fields.Item("U_CDATE").Value = list[0].CancelDate;
                         if (obj.SOType == "Consignment")
                         {
                             oStockTransfer.UserFields.Fields.Item("U_SO_TYPE").Value = "C";

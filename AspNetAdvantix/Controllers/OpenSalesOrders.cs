@@ -65,7 +65,9 @@ namespace AspNetAdvantix.Controllers
                     b.DocEntry,
                     b.LineNum,
                     b.ObjType,
-                    'Y' 'UseBaseUnits'
+                    'Y' 'UseBaseUnits',
+                    A.U_CDATE 'CancelDate',
+                    A.Address2 'ShipTo'
                 from
                     ORDR a
                     inner join RDR1 b on a.DocEntry = b.DocEntry
@@ -105,7 +107,9 @@ namespace AspNetAdvantix.Controllers
                     b.DocEntry,
                     b.LineNum,
                     b.ObjType,
-                    'Y' 'UseBaseUnits'
+                    'Y' 'UseBaseUnits',
+                    A.U_CDATE 'CancelDate',
+                    A.Address2 'ShipTo'
                 from
                     OWTQ a
                     inner join WTQ1 b on a.DocEntry = b.DocEntry
@@ -159,7 +163,9 @@ namespace AspNetAdvantix.Controllers
                     b.DocEntry,
                     b.LineNum,
                     b.ObjType,
-                    'Y' 'UseBaseUnits'
+                    'Y' 'UseBaseUnits',
+                    A.U_CDATE 'CancelDate',
+                    A.Address2 'ShipTo'
                 from
                     ORDR a
                     inner join RDR1 b on a.DocEntry = b.DocEntry
@@ -195,7 +201,9 @@ namespace AspNetAdvantix.Controllers
                     b.DocEntry,
                     b.LineNum,
                     b.ObjType,
-                    'Y' 'UseBaseUnits'
+                    'Y' 'UseBaseUnits',
+                    A.U_CDATE 'CancelDate',
+                    A.Address2 'ShipTo'
                 from
                     OWTQ a
                     inner join WTQ1 b on a.DocEntry = b.DocEntry
