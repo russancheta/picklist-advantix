@@ -30,7 +30,7 @@ export class PicklistComponent implements OnInit {
 
   // pagination
   page = 1;
-  pageSize = 20;
+  pageSize = 50;
 
   constructor(
     private apiService: Service,

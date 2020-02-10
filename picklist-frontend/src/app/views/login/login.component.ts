@@ -57,8 +57,8 @@ export class LoginComponent implements OnInit {
     credential.dbName = this.dbName;
     credential.userName = this.f.username.value;
     credential.password = this.f.password.value;
-    credential.address = '10.0.100.31';
-    credential.dbName = 'SBOLIVE_AM';
+    credential.address = '10.0.100.32';
+    credential.dbName = 'ZZ_TESTPOSTING';
     this.apiService.login(credential)
       .subscribe(
         response => {

@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { UpdateSalesOrder, Service, OpenSalesOrder, WebPLNo } from '../../core/api.client';
+import { UpdateSalesOrder, Service, OpenSalesOrder, WebPLNo, WebPlNoBranches } from '../../core/api.client';
 import { BsModalRef, BsModalService, ModalOptions, getMonth, getDay } from 'ngx-bootstrap';
 import { AuthService } from '../../shared/auth.service';
 import { environment } from '../../../environments/environment';
@@ -33,7 +33,10 @@ export class PickAndPackComponent implements OnInit {
   selectedPL: number = 0;
 
   webPLNo: WebPLNo[] = [];
+  branchPLNo: WebPlNoBranches[] = [];
+  branchName: string = '';
   plNo: number = 0;
+  branchPL = [];
   remarks: string = '';
   generateFormBtnDisable = true;
   postPickListBtnDisable = false;
@@ -44,7 +47,7 @@ export class PickAndPackComponent implements OnInit {
 
   // pagination
   page = 1;
-  pageSize = 20;
+  pageSize = 50;
 
   constructor(
     private apiService: Service,
@@ -120,6 +123,7 @@ export class PickAndPackComponent implements OnInit {
       this.checkedSO.push(obj);
     }
     console.table(this.checkedSO);
+    console.log(this.checkedSO.length);
   }
 
   getOpenSalesOrders() {
@@ -169,27 +173,32 @@ export class PickAndPackComponent implements OnInit {
 
   getAllPickList(date: Date) {
     this.apiService.getWebPLNo(date).subscribe(res => { this.webPLNo = res; });
+    this.plNo = this.webPLNo[0].plNo;
+    console.log(this.plNo);
   }
+
+  // getBranchPLNo() {
+  //   this.apiService.getWebPl('AUTOMATIC CENTRE - North Edsa').subscribe(res => {
+  //     this.branchPL = res
+  //     console.log(res);
+  //   })
+  // }
 
   findPLNo() {
     this.getAllPickList(this.dtpPLDate);
-    if (this.webPLNo.length !== 0) {
-      this.plNo = this.webPLNo[0].plNo;
-    }
-    console.log(this.webPLNo);
+     if (this.webPLNo.length !== 0) {
+       this.plNo = this.webPLNo[0].plNo;
+     }
   }
 
-  selectedPLNo(plNo: any) {
+  selectedPLNo(plNo: number) {
+    console.log(plNo)
     this.plNo = plNo;
-    console.log(plNo);
   }
 
   getDateMonthNo() {
     let dayNo = this.dtpPLDate.getDate();
-    console.log(dayNo);
     let monthNo = getMonth(this.dtpPLDate) + 1;
-    console.log(monthNo);
-    console.log(this.dtpPLDate);
   }
 
   closeModal() {

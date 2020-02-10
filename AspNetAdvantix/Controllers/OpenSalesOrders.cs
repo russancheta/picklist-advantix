@@ -245,7 +245,8 @@ namespace AspNetAdvantix.Controllers
                         when a.U_SO_TYPE = 'O'
                         then 'Outright'
                     end 'SOType',
-                    (select z.Block from CRD1 z where z.CardCode = a.CardCode and z.Address = a.U_ITR_BRANCH) 'BPName'
+                    (select z.Block from CRD1 z where z.CardCode = a.CardCode and z.Address = a.U_ITR_BRANCH) 'BPName',
+                    '' 'Remarks'
                 from
                     ORDR a
                 where
@@ -260,7 +261,8 @@ namespace AspNetAdvantix.Controllers
                     a.DocDate,
 					DATEDIFF(d, a.DocDate, getdate()) 'DaysDue',
                     'Consignment' 'SOType',
-                    (select z.Block from CRD1 z where z.CardCode = a.CardCode and z.Address = a.U_ITR_BRANCH) 'BPName'
+                    (select z.Block from CRD1 z where z.CardCode = a.CardCode and z.Address = a.U_ITR_BRANCH) 'BPName',
+                    '' 'Remarks'
                 from
                     OWTQ a
                 where
@@ -296,14 +298,54 @@ namespace AspNetAdvantix.Controllers
         public async Task<ActionResult<IEnumerable<WebPLNo>>> getWebPLNo(DateTime docDate)
         {
             var webPLNoQuery = @"
-                select distinct
+            select distinct
                     a.U_SO_PLNo 'PLNo'
                 from
                     [@PICK_LIST_H] a
                 where
                     dateadd(dd, datediff(dd, 0, a.U_SO_Date), 0) = {0}";
+            /* select DISTINCT
+                    case
+                        when T0.U_ObjType = '17'
+                        then (select distinct z.U_GIBRANCH_NAME from ORDR z where z.DocNum = T0.U_SO_DocNum)
+                        when T0.U_ObjType = '1250000001'
+                        then (select distinct z.U_GIBRANCH_NAME from OWTQ z where z.DocNum = T0.U_SO_DocNum)
+                    end 'BranchName'
+                FROM 
+                    [@PICK_LIST_H]  T0
+                WHERE
+                    T0.U_SO_PLNo <> ''
+                    and dateadd(dd, datediff(dd, 0, T0.U_SO_Date), 0) = {0} */
             var webPLNo = await _context.WebPLNo.FromSql(webPLNoQuery, docDate.Date).ToListAsync();
             return webPLNo;
+        }
+
+        [HttpGet("getWebPl")]
+        public async Task<ActionResult<IEnumerable<WebPlNoBranches>>> getWebPlNoBranches(string branchName)
+        {
+            var query = @"
+                select distinct
+                    T0.U_SO_PLNo 'PLNo'
+                from
+                    [@PICK_LIST_H] T0
+                    left join ORDR T1 on T0.U_SO_DocNum = T1.DocNum
+                where
+                    T1.U_GIBRANCH_NAME like {0}
+                    and T0.U_ObjType = '17'
+
+                union all
+
+                select distinct
+                    T0.U_SO_PLNo 'PLNo'
+                from
+                    [@PICK_LIST_H] T0
+                    left join OWTQ T1 on T0.U_SO_DocNum = T1.DocNum
+                where
+                    T1.U_GIBRANCH_NAME like {0}
+                    and T0.U_ObjType = '1250000001'";
+
+            var queryResult = await _context.WebPLNoBranches.FromSql(query, branchName).ToListAsync();
+            return queryResult;
         }
 
         [HttpPut("updateSalesOrder")]

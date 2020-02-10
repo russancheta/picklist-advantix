@@ -30,7 +30,6 @@ export class DefaultLayoutComponent implements OnDestroy {
       attributes: true,
       attributeFilter: ['class']
     });
-    console.log(this.authService.getCurrentUser());
   }
 
   logOut() {

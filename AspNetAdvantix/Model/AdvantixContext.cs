@@ -20,5 +20,6 @@ namespace AspNetAdvantix.Model
         public virtual DbQuery<SalesOrderMonitoring> SalesOrderMonitoring { get; set; }
         public virtual DbQuery<SalesOrderMonitoringDetails> SalesOrderMonitoringDetails { get; set; }
         public virtual DbQuery<WebPLNo> WebPLNo { get; set; }
+        public virtual DbQuery<WebPlNoBranches> WebPLNoBranches { get; set; }
     }
 }

@@ -14,7 +14,7 @@ namespace AspNetAdvantix.Helpers
         public static SAPbobsCOM.Company LoginSAP(string address, string dbName, string userName, string password)
         {
             Company oCompany = new Company();
-            oCompany.LicenseServer = "10.0.100.31";
+            oCompany.LicenseServer = "10.0.100.32";
             oCompany.language = BoSuppLangs.ln_English;
             oCompany.UseTrusted = false;
 

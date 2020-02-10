@@ -3,7 +3,7 @@
         <div class="card-body">
             <h4>Open Orders Monitoring</h4>
             <div class="form-group">
-                <button class="btn btn-primary" (click)="closeConfirm()" [disabled]="checkSOD.length === 0">Close
+                <button class="btn btn-primary" (click)="closeConfirm()" [disabled]="checkSOD.length == 0">Close
                     Document</button>
             </div>
             <div style="overflow-y: auto; height: 400px; display: block;">
@@ -16,6 +16,7 @@
                             <th>Days Due</th>
                             <th>BP Name</th>
                             <th>Items</th>
+                            <th>Remarks</th>
                             <th class="text-center">Close</th>
                         </tr>
                     </thead>
@@ -33,10 +34,13 @@
                                     View
                                 </button>
                             </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" [(ngModel)]="i.remarks">
+                            </td>
                             <td class="text-center">
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input"
-                                        (change)="checkedSalesOrder(i.docEntry, i.type)">
+                                    <input type="checkbox" class="form-check-input" [value]="i.remarks"
+                                    (change)="checkedSalesOrder(i.docEntry, i.type, i.remarks)">
                                 </div>
                             </td>
                         </tr>

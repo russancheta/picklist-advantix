@@ -698,6 +698,66 @@ export class Service {
     }
 
     /**
+     * @param branchName (optional) 
+     * @return Success
+     */
+    getWebPl(branchName: string | undefined): Observable<WebPlNoBranches[]> {
+        let url_ = this.baseUrl + "/api/controller/getWebPl?";
+        if (branchName === null)
+            throw new Error("The parameter 'branchName' cannot be null.");
+        else if (branchName !== undefined)
+            url_ += "branchName=" + encodeURIComponent("" + branchName) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetWebPl(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetWebPl(<any>response_);
+                } catch (e) {
+                    return <Observable<WebPlNoBranches[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<WebPlNoBranches[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetWebPl(response: HttpResponseBase): Observable<WebPlNoBranches[]> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(WebPlNoBranches.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<WebPlNoBranches[]>(<any>null);
+    }
+
+    /**
      * @param userCode (optional) 
      * @param body (optional) 
      * @return Success
@@ -1504,6 +1564,7 @@ export class SalesOrderMonitoring implements ISalesOrderMonitoring {
     daysDue?: number;
     soType?: string | undefined;
     bpName?: string | undefined;
+    remarks?: string | undefined;
 
     constructor(data?: ISalesOrderMonitoring) {
         if (data) {
@@ -1523,6 +1584,7 @@ export class SalesOrderMonitoring implements ISalesOrderMonitoring {
             this.daysDue = data["daysDue"];
             this.soType = data["soType"];
             this.bpName = data["bpName"];
+            this.remarks = data["remarks"];
         }
     }
 
@@ -1542,6 +1604,7 @@ export class SalesOrderMonitoring implements ISalesOrderMonitoring {
         data["daysDue"] = this.daysDue;
         data["soType"] = this.soType;
         data["bpName"] = this.bpName;
+        data["remarks"] = this.remarks;
         return data; 
     }
 }
@@ -1554,6 +1617,7 @@ export interface ISalesOrderMonitoring {
     daysDue?: number;
     soType?: string | undefined;
     bpName?: string | undefined;
+    remarks?: string | undefined;
 }
 
 export class SalesOrderMonitoringDetails implements ISalesOrderMonitoringDetails {
@@ -1650,6 +1714,42 @@ export class WebPLNo implements IWebPLNo {
 
 export interface IWebPLNo {
     plNo?: number | undefined;
+}
+
+export class WebPlNoBranches implements IWebPlNoBranches {
+    plNo?: number;
+
+    constructor(data?: IWebPlNoBranches) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.plNo = data["plNo"];
+        }
+    }
+
+    static fromJS(data: any): WebPlNoBranches {
+        data = typeof data === 'object' ? data : {};
+        let result = new WebPlNoBranches();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["plNo"] = this.plNo;
+        return data; 
+    }
+}
+
+export interface IWebPlNoBranches {
+    plNo?: number;
 }
 
 export class UpdateSalesOrder implements IUpdateSalesOrder {
@@ -1922,6 +2022,7 @@ export interface IPicklist {
 
 export class ForClosingViewModel implements IForClosingViewModel {
     docEntry?: number;
+    remarks?: string | undefined;
     type?: string | undefined;
 
     constructor(data?: IForClosingViewModel) {
@@ -1936,6 +2037,7 @@ export class ForClosingViewModel implements IForClosingViewModel {
     init(data?: any) {
         if (data) {
             this.docEntry = data["docEntry"];
+            this.remarks = data["remarks"];
             this.type = data["type"];
         }
     }
@@ -1950,6 +2052,7 @@ export class ForClosingViewModel implements IForClosingViewModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["docEntry"] = this.docEntry;
+        data["remarks"] = this.remarks;
         data["type"] = this.type;
         return data; 
     }
@@ -1957,6 +2060,7 @@ export class ForClosingViewModel implements IForClosingViewModel {
 
 export interface IForClosingViewModel {
     docEntry?: number;
+    remarks?: string | undefined;
     type?: string | undefined;
 }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { Service, SalesOrderMonitoring, SalesOrderMonitoringDetails, OpenSalesOrder, ForClosingViewModel } from '../../core/api.client';
+import { Service, SalesOrderMonitoring, SalesOrderMonitoringDetails, ForClosingViewModel } from '../../core/api.client';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { AuthService } from '../../shared/auth.service';
 import Swal from 'sweetalert2';
@@ -21,9 +21,13 @@ export class OpenSOComponent implements OnInit {
 
   modalRef: BsModalRef;
 
+  remarks: string = '';
+
+  button = true;
+
   // pagination
   page = 1;
-  pageSize = 20;
+  pageSize = 50;
 
   constructor(
     private apiService: Service,
@@ -40,28 +44,40 @@ export class OpenSOComponent implements OnInit {
     this.apiService.getSalesOrderMonitoring().subscribe(res => {
       this.soMonitoring = res;
       Swal.close();
-      console.table(res);
     })
   }
 
   getSOMonitDetails(docnum: number) {
     this.apiService.getSalesOrderMonitoringDetails(docnum).subscribe(res => {
       this.soMonitoringDetails = res;
-      console.table(res);
     })
   }
 
-  checkedSalesOrder(docEntry: number, type: string) {
-    const o = new ForClosingViewModel();
+  // checkedSalesOrder(docEntry: number, type: string) {
+  //   const o = new ForClosingViewModel();
+  //   o.docEntry = docEntry;
+  //   o.type = type;
+  //   if (this.checkSOD.includes(o)) {
+  //     const i = this.checkSOD.indexOf(o);
+  //     this.checkSOD.splice(i, 1);
+  //   } else {
+  //     this.checkSOD.push(o);
+  //   }
+  //   console.log(o);
+  // }
+
+  checkedSalesOrder(docEntry: number, type: string, remarks: string) {
+    const o = new SalesOrderMonitoring
     o.docEntry = docEntry;
     o.type = type;
+    o.remarks = remarks;
     if (this.checkSOD.includes(o)) {
       const i = this.checkSOD.indexOf(o);
       this.checkSOD.splice(i, 1);
     } else {
       this.checkSOD.push(o);
     }
-    console.table(this.checkSOD);
+    console.log(o);
   }
 
   closeSalesOrder() {

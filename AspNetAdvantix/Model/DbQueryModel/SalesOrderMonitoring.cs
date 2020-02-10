@@ -11,5 +11,6 @@ namespace AspNetAdvantix.Model
         public int DaysDue { get; set; }
         public string SOType { get; set; }
         public string BPName { get; set; }
+        public string Remarks { get; set; }
     }
 }

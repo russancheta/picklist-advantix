@@ -115,6 +115,7 @@ namespace AspNetAdvantix.Controllers
                             oStockTransfer.UserFields.Fields.Item("U_SO_TYPE").Value = "O";
                         }
                         oStockTransfer.UserFields.Fields.Item("U_DelStat").Value = list[0].DelStat;
+                        Console.WriteLine(list[0].DelStat);
                         oStockTransfer.Comments = $"Based on Sales Order {list[0].DocNum}";
 
                         // rows
@@ -141,6 +142,11 @@ namespace AspNetAdvantix.Controllers
                                 response.Result = "Success";
                                 response.Message = "";
                                 response.ResultData = "";
+
+                                // close Sales Order upon posting of Inventory Transfer
+                                Documents oSalesOrder = (SAPbobsCOM.Documents)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oOrders);
+                                oSalesOrder.GetByKey(list[0].DocEntry);
+                                int iRetCode = oSalesOrder.Close();
                             }
                             else
                             {
@@ -157,11 +163,6 @@ namespace AspNetAdvantix.Controllers
                         }
                     }
                 }
-
-                // close Sales Order upon posting of Inventory Transfer
-                Documents oSalesOrder = (SAPbobsCOM.Documents)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oOrders);
-                oSalesOrder.GetByKey(list[0].DocEntry);
-                int iRetCode = oSalesOrder.Close();
             }
             else
             {
@@ -266,6 +267,8 @@ namespace AspNetAdvantix.Controllers
                     Console.WriteLine("CLOSE SO");
                     Documents oSalesOrder = (SAPbobsCOM.Documents)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oOrders);
                     oSalesOrder.GetByKey(obj.DocEntry);
+                    oSalesOrder.UserFields.Fields.Item("U_Remarks").Value = obj.Remarks;
+                    oSalesOrder.Update();
                     int iRetCode = oSalesOrder.Close();
                     if (iRetCode != 0)
                     {
@@ -281,6 +284,8 @@ namespace AspNetAdvantix.Controllers
                     Console.WriteLine("CLOSE ITR");
                     StockTransfer oInvTransferReq = (SAPbobsCOM.StockTransfer)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oInventoryTransferRequest);
                     oInvTransferReq.GetByKey(obj.DocEntry);
+                    oInvTransferReq.UserFields.Fields.Item("U_Remarks").Value = obj.Remarks;
+                    oInvTransferReq.Update();
                     int iRetCode = oInvTransferReq.Close();
                     if (iRetCode != 0)
                     {

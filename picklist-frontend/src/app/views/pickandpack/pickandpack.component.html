@@ -122,12 +122,25 @@
             <input type="text" class="form-control" #dp="bsDatepicker" bsDatepicker [(ngModel)]="dtpPLDate"
                 (ngModelChange)="findPLNo(dtpPLDate)">
         </div>
+    <!--
+        <div class="form-group">
+            <label for="plNo">Branches</label>
+            <select class="form-control form-control-sm" (change)="selectedPLNo($event.target.value)">
+                <option *ngFor="let o of webPLNo" [value]="o.branchName">{{ o.branchName }}</option>
+            </select>
+        </div>
+    -->
         <div class="form-group">
             <label for="plNo">Pick List No.</label>
             <select class="form-control form-control-sm" (change)="selectedPLNo($event.target.value)">
                 <option *ngFor="let o of webPLNo" [value]="o.plNo">{{ o.plNo }}</option>
             </select>
         </div>
+    <!--
+        <button (click)="getBranchPLNo('AUTOMATIC CENTRE - North Edsa', dtpPLDate)">
+            sdffds
+        </button>
+    -->
     </div>
     <div class="modal-footer">
         <button class="btn btn-primary" (click)="viewReport()">Generate Form</button>
